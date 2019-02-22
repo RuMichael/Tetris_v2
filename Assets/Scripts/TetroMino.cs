@@ -54,7 +54,11 @@ public class TetroMino : MonoBehaviour
             transform.position += new Vector3(0, -1, 0);
             fall = Time.time;
             if (!CheckIsVallidPosition())
+            {
                 transform.position += new Vector3(0, 1, 0);
+                enabled = false;
+                FindObjectOfType<Game>().SpawnNextTetromino();
+            }
         }
 
     }
