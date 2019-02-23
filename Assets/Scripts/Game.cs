@@ -14,32 +14,69 @@ public class Game : MonoBehaviour
         SpawnNextTetromino();
     }
 
-    // Update is called once per frame
-    void Update()
+    bool IsFullRowAt(int y)     //проверяем заполнена ли строка "у" в grid
     {
+        for (int x = 0; x < GridWeight; x++)        
+            if (grid[x, y] == null)
+                return false;
+        
+        return true;
+    }
+
+    void DeleteMinoAt(int y)    //удаляем объекты Mino строки "y" с рабочей области и значение в массиве grid 
+    {
+        for (int x = 0; x < GridWeight; x++)
+        {
+            Destroy(grid[x, y].gameObject);
+            grid[x, y] = null;
+        }
+        
+    }
+
+    void MoveRowDown(int y)     // отпустить строку на 1 позицию
+    {
+        for (int x = 0; x < GridWeight; x++)
+            if (grid[x,y] != null)
+            {
+                grid[x, y - 1] = grid[x, y];
+                grid[x, y] = null;
+                grid[x, y - 1].position += new Vector3(0,-1,0);
+            }        
+    }
+
+    void MoveAllRowDown(int y)  // отпустить все строки с позиции "у"
+    {
+        for (int i = y; i < GridHeight; i++)        
+            MoveRowDown(i);
+        
+    }
+
+    public void DeleteRow()
+    {
+        for (int y = 0; y < GridHeight; y++)        
+            if (IsFullRowAt(y))
+            {
+                DeleteMinoAt(y);
+                MoveAllRowDown(y + 1);
+                --y;
+            }
         
     }
 
     public void UpdateGrid(TetroMino tetroMino)         //запись в Grid новых Tetromino
     {
-        for (int y = 0; y < GridHeight; y++)
-        {
-            for (int x = 0; x < GridWeight; x++)
-            {
+        for (int y = 0; y < GridHeight; y++)        
+            for (int x = 0; x < GridWeight; x++)            
                 if (grid[x, y] != null)
                     if (grid[x, y].parent == tetroMino.transform)
                         grid[x, y] = null;
-            }
-        }
+                    
         foreach (Transform mino in tetroMino.transform)
         {
             Vector2 pos = Round(mino.position);
-
             if (pos.y < GridHeight)
                 grid[(int)pos.x, (int)pos.y] = mino;
-
         }
-
     }
 
     public Transform GetTransformAtGridPosition(Vector2 pos)  // возвращает значение из grid по значению Vector2
