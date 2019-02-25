@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
@@ -8,10 +9,83 @@ public class Game : MonoBehaviour
     public static int GridWeight = 10;
     public static Transform[,] grid = new Transform[GridWeight, GridHeight];
 
-    // Start is called before the first frame update
+    public static int scoreOneRow = 10;
+    public static int scoreTwoRow = 30;
+    public static int scoreThreeRow = 80;
+    public static int scoreFourRow = 200;
+
+    static int numberOfRowsThisTurn = 0;
+    int currentScore = 0;
+    int countRows = 0;
+    int speedDifficulty = 1;
+    int countSpeedAtRows = 0;
+
+    bool isStart = true;
+    GameObject previewTetromino;
+
+    public Text hub_score;
+    public Text hub_rows;
+    public Text hub_difficulty;
+
     void Start()
     {
         SpawnNextTetromino();
+    }
+
+    void Update()
+    {
+        UpdateScore();
+        UpdateUI();
+        UpdateDifficultySpeed();
+    }
+
+    void UpdateDifficultySpeed()
+    {
+        if ((countRows - countSpeedAtRows >= 15 || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < 5)
+        {
+            speedDifficulty++;
+            countSpeedAtRows = countRows;
+            TetroMino.fallspeed = 1.0f - (0.15f * speedDifficulty);
+        }
+        else if ((Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus)) && speedDifficulty > 1)
+        {
+            speedDifficulty--;
+            countSpeedAtRows = countRows;
+            TetroMino.fallspeed = 1.0f - (0.15f * speedDifficulty);
+        }
+        
+    }
+
+    void UpdateUI()
+    {
+        hub_score.text = currentScore.ToString();
+        hub_difficulty.text = "Difficulty: \n" + speedDifficulty.ToString();
+        hub_rows.text = "Completed Rows:\n" + countRows.ToString();        
+    }
+
+    void UpdateScore()
+    {
+        switch (numberOfRowsThisTurn)
+        {
+            case 1:
+                currentScore += scoreOneRow;
+                countRows += 1;
+                break;
+            case 2:
+                currentScore += scoreTwoRow;
+                countRows += 2;
+                break;
+            case 3:
+                currentScore += scoreThreeRow;
+                countRows += 3;
+                break;
+            case 4:
+                currentScore += scoreFourRow;
+                countRows += 4;
+                break;
+        }
+        numberOfRowsThisTurn = 0;
+
     }
 
     bool IsFullRowAt(int y)     //проверяем заполнена ли строка "у" в grid
@@ -19,7 +93,7 @@ public class Game : MonoBehaviour
         for (int x = 0; x < GridWeight; x++)        
             if (grid[x, y] == null)
                 return false;
-        
+        numberOfRowsThisTurn++;
         return true;
     }
 
@@ -89,7 +163,24 @@ public class Game : MonoBehaviour
 
     public void SpawnNextTetromino()        //спавн Tetromino
     {
-        GameObject nextTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);     
+        GameObject nextTetromino;
+        if (isStart)
+        {
+            nextTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);
+            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f, 9.0f), Quaternion.identity);
+            previewTetromino.GetComponent<TetroMino>().enabled = false;
+            isStart = false;
+        }else
+        {
+            nextTetromino = previewTetromino;
+            nextTetromino.GetComponent<TetroMino>().enabled = true;
+            nextTetromino.transform.position = new Vector2(4.0f, 20.0f);
+
+            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(15.0f, 5.0f), Quaternion.identity);
+            previewTetromino.GetComponent<TetroMino>().enabled = false;
+        }
+
+           
         
     }
 
@@ -98,7 +189,7 @@ public class Game : MonoBehaviour
         return ((int)position.x >= 0 && (int)position.y >= 0 && (int)position.x < GridWeight);
     }
 
-    public Vector2 Round(Vector2 position)      //выравниваем до четных чисел Vector2
+    public Vector2 Round(Vector2 position)      //выравниваем до четных чисел Vector2, передаем новый элемент
     {
         return new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
     }
@@ -135,5 +226,25 @@ public class Game : MonoBehaviour
 
         return randomTetrominoName;
     }
+
+    public bool CheckIsAboveGrid(TetroMino tetromino)
+    {
+            foreach (Transform mino in tetromino.transform)
+            {
+                Vector2 pos = Round(mino.position);
+                if (pos.y > GridHeight - 1)
+                    return true;
+            }
+
+        
+        return false;
+    }
+
+    public void GameOver()
+    {
+        Application.LoadLevel("GameOver");
+        
+    }
+    
 
 }

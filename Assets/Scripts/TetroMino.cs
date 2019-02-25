@@ -7,9 +7,10 @@ public class TetroMino : MonoBehaviour
 {
     public bool AllowRotation;
     public bool LimitRotation;
+    
 
     float fall = 0;
-    public float fallspeed = 1;  
+    public static float fallspeed = 1.6f;  
 
     void Start()
     {
@@ -65,7 +66,10 @@ public class TetroMino : MonoBehaviour
                 transform.position += new Vector3(0, 1, 0);
                 enabled = false;
                 FindObjectOfType<Game>().DeleteRow();
-                FindObjectOfType<Game>().SpawnNextTetromino();
+                if (FindObjectOfType<Game>().CheckIsAboveGrid(this)) 
+                    FindObjectOfType<Game>().GameOver();
+                else
+                    FindObjectOfType<Game>().SpawnNextTetromino();
             }
             else
                 FindObjectOfType<Game>().UpdateGrid(this);
