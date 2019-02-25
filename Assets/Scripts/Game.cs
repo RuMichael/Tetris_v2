@@ -58,7 +58,7 @@ public class Game : MonoBehaviour
 
     void UpdateUI()
     {
-        hub_score.text = currentScore.ToString();
+        hub_score.text = "Score: \n" + currentScore.ToString();
         hub_difficulty.text = "Difficulty: \n" + speedDifficulty.ToString();
         hub_rows.text = "Completed Rows:\n" + countRows.ToString();        
     }
@@ -167,7 +167,7 @@ public class Game : MonoBehaviour
         if (isStart)
         {
             nextTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);
-            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f, 9.0f), Quaternion.identity);
+            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
             previewTetromino.GetComponent<TetroMino>().enabled = false;
             isStart = false;
         }else
@@ -176,7 +176,7 @@ public class Game : MonoBehaviour
             nextTetromino.GetComponent<TetroMino>().enabled = true;
             nextTetromino.transform.position = new Vector2(4.0f, 20.0f);
 
-            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(15.0f, 5.0f), Quaternion.identity);
+            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
             previewTetromino.GetComponent<TetroMino>().enabled = false;
         }
 
@@ -242,8 +242,8 @@ public class Game : MonoBehaviour
 
     public void GameOver()
     {
-        Application.LoadLevel("GameOver");
-        
+        TetroMino.fallspeed = 1.6f;
+        Application.LoadLevel("GameOver");        
     }
     
 
