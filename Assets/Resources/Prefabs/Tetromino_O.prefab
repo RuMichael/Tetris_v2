@@ -365,4 +365,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowRotation: 0
   LimitRotation: 0
-  fallspeed: 1
+  game: {fileID: 1272327589965216400, guid: 8c38673e5d8cb3340a6963fa1565b22b, type: 3}

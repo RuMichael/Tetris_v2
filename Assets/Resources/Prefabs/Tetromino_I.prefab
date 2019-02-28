@@ -365,3 +365,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowRotation: 1
   LimitRotation: 1
+  game: {fileID: 0}

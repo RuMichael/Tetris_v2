@@ -286,6 +286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowRotation: 1
   LimitRotation: 1
+  game: {fileID: 1272327589965216400, guid: 8c38673e5d8cb3340a6963fa1565b22b, type: 3}
 --- !u!1 &8676912177203622507
 GameObject:
   m_ObjectHideFlags: 0
