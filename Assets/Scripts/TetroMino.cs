@@ -7,17 +7,17 @@ public class TetroMino : MonoBehaviour
 {
     public bool AllowRotation;
     public bool LimitRotation;
-    public static Game game;
+    static Game game;
     
 
     float fall = 0;
     public static float fallspeed = 1.6f;
-
+    float moving = 0;
     #region //по видеоурокам
 
     void Start()
     {
-
+        game = Game.getInstance;
     }
     
     void Update()
@@ -27,45 +27,70 @@ public class TetroMino : MonoBehaviour
 
     void CheckUserInput()  // работа с кнопками
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)) {
-            transform.position += new Vector3(-1, 0, 0);
-            if (!CheckIsVallidPosition())
-                transform.position += new Vector3(1, 0, 0);
-            else
-                game.UpdateGrid(this);
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || ((Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))&& Time.time - moving >= 0.08f ))
+        {
+            moving = Time.time;
+            MoveLeft();
 
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) {
-            transform.position += new Vector3(1, 0, 0);
-            if (!CheckIsVallidPosition())
-                transform.position += new Vector3(-1, 0, 0);
-            else
-                game.UpdateGrid(this);
+        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || ((Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) && Time.time - moving >= 0.08f))
+        {
+            
+            moving = Time.time;
+            MoveRight();            
 
         }
-        else if (Input.GetKeyDown(KeyCode.Space)) {
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
             if (AllowRotation)
-            {                
+            {
                 RotateTetromino();
             }
         }
-        else if ((Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) || Time.time - fall >= fallspeed) {
-            transform.position += new Vector3(0, -1, 0);
-            fall = Time.time;
-            if (!CheckIsVallidPosition())
-            {
-                transform.position += new Vector3(0, 1, 0);
-                enabled = false;
-                game.DeleteRow();
-                if (game.CheckIsAboveGrid(this)) 
-                    game.GameOver();
-                else
-                    game.SpawnNextTetromino();
-            }
-            else
-                game.UpdateGrid(this);
+        else if ((Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) || Time.time - fall >= fallspeed || ((Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) && Time.time - moving >= 0.08f))
+        {
+            moving = Time.time;
+            MoveDown();
         }
     }
+
+    void MoveLeft()
+    {
+        transform.position += new Vector3(-1, 0, 0);
+        if (!CheckIsVallidPosition())
+            transform.position += new Vector3(1, 0, 0);
+        else
+            game.UpdateGrid(this);
+    }
+
+    void MoveRight()
+    {
+        transform.position += new Vector3(1, 0, 0);
+        if (!CheckIsVallidPosition())
+            transform.position += new Vector3(-1, 0, 0);
+        else
+            game.UpdateGrid(this);
+    }
+
+    void MoveDown()
+    {
+        transform.position += new Vector3(0, -1, 0);
+        fall = Time.time;
+        if (!CheckIsVallidPosition())
+        {
+            transform.position += new Vector3(0, 1, 0);
+            enabled = false;
+            game.DeleteRow();
+            if (game.CheckIsAboveGrid(this))
+                game.GameOver();
+            else
+                game.SpawnNextTetromino();
+        }
+        else
+            game.UpdateGrid(this);
+    }
+
+
        
     bool CheckIsVallidPosition() //Проверяем возможность движения Tetromino
     {

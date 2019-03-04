@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Game : MonoBehaviour
@@ -27,10 +28,21 @@ public class Game : MonoBehaviour
     public Text hub_rows;
     public Text hub_difficulty;
 
+    static Game instance = null;
+    public static Game getInstance
+    {
+        get{
+            return instance; }
+    }
+    
+
     void Start()
     {
+        if (instance != null) Destroy(gameObject);
+        instance = this;        
+
         SpawnNextTetromino();
-        TetroMino.game = this; // исправление ошибки FindObjectOfType<>
+        
     }    
 
     void UpdateDifficultySpeed()
@@ -249,7 +261,8 @@ public class Game : MonoBehaviour
     public void GameOver()
     {
         TetroMino.fallspeed = 1.6f;
-        Application.LoadLevel("GameOver");        
+        SceneManager.LoadScene("GameOver");
+        //Application.LoadLevel("GameOver");
     }
 
     #endregion
