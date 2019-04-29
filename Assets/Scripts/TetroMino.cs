@@ -8,7 +8,12 @@ public class TetroMino : MonoBehaviour
     public bool AllowRotation;
     public bool LimitRotation;
     Game game;  
-
+    public Game SetGame
+    {
+        set {
+            game=value;;
+        }
+    }
     float fall = 0;
     public float fallspeed = 1.6f;
     float moving = 0;
@@ -16,7 +21,7 @@ public class TetroMino : MonoBehaviour
 
     void Start()
     {
-        game = Game.getInstance;
+        
     }    
     void Update()
     {        
@@ -50,7 +55,6 @@ public class TetroMino : MonoBehaviour
             MoveDown();
         }
     }
-
     void MoveLeft()
     {
         transform.position += new Vector3(-1, 0, 0);
@@ -59,7 +63,6 @@ public class TetroMino : MonoBehaviour
         else
             game.UpdateGrid(this);
     }
-
     void MoveRight()
     {
         transform.position += new Vector3(1, 0, 0);
@@ -68,7 +71,6 @@ public class TetroMino : MonoBehaviour
         else
             game.UpdateGrid(this);
     }
-
     void MoveDown()
     {
         transform.position += new Vector3(0, -1, 0);
@@ -85,10 +87,7 @@ public class TetroMino : MonoBehaviour
         }
         else
             game.UpdateGrid(this);
-    }
-
-
-       
+    }       
     bool CheckIsVallidPosition() //Проверяем возможность движения Tetromino
     {
         foreach (Transform mino in transform)
@@ -102,9 +101,7 @@ public class TetroMino : MonoBehaviour
         return true;
         
     }
-
     #endregion 
-
     void RotateTetromino() // поворот тетрамино на 90
     {
         Transform minoError;
@@ -126,7 +123,6 @@ public class TetroMino : MonoBehaviour
         tmpCenterPositionX = CheckCenterX(); 
         transform.position += new Vector3(centerPositionX - tmpCenterPositionX, 0, 0); // смещаем положение по х, но ориентируемся на центр тетромино
 
-
         if (!CheckIsVallidPosition(out minoError))
         {
             if (!PositionOffset(minoError.position.x))
@@ -147,7 +143,6 @@ public class TetroMino : MonoBehaviour
         else
             game.UpdateGrid(this);
     }
-
     bool PositionOffset(float minoErrorX)   //дополнительная после поворота Тетрамино со смещением в сторону от преграды
     {
         float minX = CheckMinX();
@@ -169,8 +164,6 @@ public class TetroMino : MonoBehaviour
         else            
             return true;
     }
-
-
     float CheckMinY()       //найти минимальное значение позиции тетромино по "у"
     {
         float minPosY = 20f;
@@ -180,7 +173,6 @@ public class TetroMino : MonoBehaviour
 
         return minPosY;
     } 
-
     float CheckCenterX()    //найти центральное(округленное до целого) значение позиции тетромино по "х"
     {
         float[] centerPosX = new float[4];
@@ -196,7 +188,6 @@ public class TetroMino : MonoBehaviour
 
         return Mathf.Round(result / 4f);
     }
-
     float CheckMinX()       //найти минимальное значение позиции тетромино по "х"
     {
         float minPosX = 10f;
@@ -206,7 +197,6 @@ public class TetroMino : MonoBehaviour
 
         return minPosX;
     }
-
     float CheckMaxX()       //найти максимальное значение позиции тетромино по "у"
     {
         float maxPosX = 0;
@@ -216,8 +206,6 @@ public class TetroMino : MonoBehaviour
 
         return maxPosX;
     }
-
-
     bool CheckIsVallidPosition(out Transform minoError) //Проверяем возможность движения Tetromino, узнаем какая из mino была неверно установлена
     {
         foreach (Transform mino in transform)
@@ -231,7 +219,5 @@ public class TetroMino : MonoBehaviour
         }
         minoError = null;
         return true;
-    }
-
-    
+    }    
 }

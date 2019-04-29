@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
-    bool players = new Player().SoloGame;
+    bool players = Player.SoloGame;
     public const int GridHeight = 20;
     public const int GridWeight = 10;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
@@ -29,29 +29,18 @@ public class Game : MonoBehaviour
     public Text hub_score;
     public Text hub_rows;
     public Text hub_difficulty;
-
-    static Game instance = null;
-    
-    public static Game getInstance
-    {
-        get{
-            return instance; }
-    }
     
 
     void Start()
     {
-        if (instance != null) 
-        {
-            Destroy(gameObject);
-            return;
-            }       
-        instance = this;        
-        DontDestroyOnLoad(gameObject);
-
         SpawnNextTetromino();
-        if (players)
-            speedDifficulty =5;
+        if (!players)
+        {
+            FindObjectOfType<Camera>().transform.localPosition+= new Vector3(9,0,0);
+            hub_score.transform.localPosition+= new Vector3(-430,0,0);
+            hub_rows.transform.localPosition+= new Vector3(-430,0,0);
+            hub_difficulty.transform.localPosition+= new Vector3(-430,0,0);
+        }
     }    
 
     void UpdateDifficultySpeed()
@@ -99,6 +88,7 @@ public class Game : MonoBehaviour
         if (isStart)
         {
             nextTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);
+            nextTetromino.GetComponent<TetroMino>().SetGame=this;
             previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
             previewTetromino.GetComponent<TetroMino>().enabled = false;     
             isStart = false;
@@ -106,6 +96,7 @@ public class Game : MonoBehaviour
         else
         {
             nextTetromino = previewTetromino;
+            nextTetromino.GetComponent<TetroMino>().SetGame = this;
             nextTetromino.GetComponent<TetroMino>().enabled = true;
             nextTetromino.transform.position = new Vector2(4.0f, 20.0f);
 
@@ -256,16 +247,13 @@ public class Game : MonoBehaviour
                 if (pos.y > GridHeight - 1)
                     return true;
             }
-
         
         return false;
     }
 
     public void GameOver()
     {
-        //TetroMino.fallspeed = 1.6f;
         SceneManager.LoadScene("GameOver");
-        //Application.LoadLevel("GameOver");
     }
 
     #endregion

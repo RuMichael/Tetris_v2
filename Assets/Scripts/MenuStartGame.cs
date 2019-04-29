@@ -13,14 +13,12 @@ public class MenuStartGame : MonoBehaviour
     }
     public void PlayTogether()
     {
-        Player pl = new Player();
-        pl.SoloGame = false;
+        Player.SoloGame = false;
         SceneManager.LoadScene("Level");
     }
     public void PlaySolo()
     {
-        Player pl = new Player();
-        pl.SoloGame = true;
+        Player.SoloGame = true;
         SceneManager.LoadScene("Level");
     }
 }

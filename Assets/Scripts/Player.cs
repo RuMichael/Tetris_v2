@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     string name;
     static bool soloGame;
-    public bool SoloGame
+    public static bool SoloGame
     {
         get{return soloGame;}
         set{soloGame = value;}
