@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
-    bool players = Player.SoloGame;
+    byte players = 0;
     public const int GridHeight = 20;
     public const int GridWeight = 10;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
@@ -30,11 +30,21 @@ public class Game : MonoBehaviour
     public Text hub_rows;
     public Text hub_difficulty;
     
+    public byte GetPlayers
+    {
+        get{
+            return players;
+        }
+    }
 
     void Start()
     {
+        if (Player.SoloGame)
+            players = 1;
+        else
+            players = 2;
         SpawnNextTetromino();
-        if (!players)
+        if (players == 2)
         {
             FindObjectOfType<Camera>().transform.localPosition+= new Vector3(9,0,0);
             hub_score.transform.localPosition+= new Vector3(-430,0,0);

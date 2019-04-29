@@ -8,10 +8,13 @@ public class TetroMino : MonoBehaviour
     public bool AllowRotation;
     public bool LimitRotation;
     Game game;  
+
+    byte players=0;
     public Game SetGame
     {
         set {
-            game=value;;
+            game = value;
+            players = game.GetPlayers;
         }
     }
     float fall = 0;
@@ -21,7 +24,7 @@ public class TetroMino : MonoBehaviour
 
     void Start()
     {
-        
+
     }    
     void Update()
     {        
