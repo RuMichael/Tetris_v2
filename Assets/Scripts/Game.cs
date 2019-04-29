@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
+    bool players = new Player().SoloGame;
     public const int GridHeight = 20;
     public const int GridWeight = 10;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
@@ -49,13 +50,12 @@ public class Game : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         SpawnNextTetromino();
-        
+        if (players)
+            speedDifficulty =5;
     }    
 
     void UpdateDifficultySpeed()
     {
-        
-
         if ((countRows - countSpeedAtRows >= 15 || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < 5)
         {
             speedDifficulty++;
@@ -67,7 +67,6 @@ public class Game : MonoBehaviour
             countSpeedAtRows = countRows;            
         }
         nextTetromino.GetComponent<TetroMino>().fallspeed = 1.1f - (0.15f * speedDifficulty);
-        
     }
         
     void UpdateScore()
@@ -113,9 +112,6 @@ public class Game : MonoBehaviour
             previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
             previewTetromino.GetComponent<TetroMino>().enabled = false;
         }
-
-
-
     }
     
 

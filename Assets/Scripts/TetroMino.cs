@@ -7,8 +7,7 @@ public class TetroMino : MonoBehaviour
 {
     public bool AllowRotation;
     public bool LimitRotation;
-    Game game;
-    
+    Game game;  
 
     float fall = 0;
     public float fallspeed = 1.6f;
@@ -18,13 +17,11 @@ public class TetroMino : MonoBehaviour
     void Start()
     {
         game = Game.getInstance;
-    }
-    
+    }    
     void Update()
     {        
         CheckUserInput();
     }
-
     void CheckUserInput()  // работа с кнопками
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || ((Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))&& Time.time - moving >= 0.065f ))
