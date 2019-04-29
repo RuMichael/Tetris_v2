@@ -6,16 +6,16 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
-    public static int GridHeight = 20;
-    public static int GridWeight = 10;
-    public static Transform[,] grid = new Transform[GridWeight, GridHeight];
+    public const int GridHeight = 20;
+    public const int GridWeight = 10;
+    public Transform[,] grid = new Transform[GridWeight, GridHeight];
 
-    public static int scoreOneRow = 10;
-    public static int scoreTwoRow = 30;
-    public static int scoreThreeRow = 80;
-    public static int scoreFourRow = 200;
+    public const int scoreOneRow = 10;
+    public const int scoreTwoRow = 30;
+    public const int scoreThreeRow = 80;
+    public const int scoreFourRow = 200;
 
-    static int numberOfRowsThisTurn = 0;
+    int numberOfRowsThisTurn = 0;
     int currentScore = 0;
     int countRows = 0;
     int speedDifficulty = 1;
@@ -23,12 +23,14 @@ public class Game : MonoBehaviour
 
     bool isStart = true;
     GameObject previewTetromino;
+    GameObject nextTetromino;
 
     public Text hub_score;
     public Text hub_rows;
     public Text hub_difficulty;
 
     static Game instance = null;
+    
     public static Game getInstance
     {
         get{
@@ -38,8 +40,13 @@ public class Game : MonoBehaviour
 
     void Start()
     {
-        if (instance != null) Destroy(gameObject);
+        if (instance != null) 
+        {
+            Destroy(gameObject);
+            return;
+            }       
         instance = this;        
+        DontDestroyOnLoad(gameObject);
 
         SpawnNextTetromino();
         
@@ -47,18 +54,19 @@ public class Game : MonoBehaviour
 
     void UpdateDifficultySpeed()
     {
+        
+
         if ((countRows - countSpeedAtRows >= 15 || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < 5)
         {
             speedDifficulty++;
-            countSpeedAtRows = countRows;
-            TetroMino.fallspeed = 1.0f - (0.15f * speedDifficulty);
+            countSpeedAtRows = countRows;            
         }
         else if ((Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus)) && speedDifficulty > 1)
         {
             speedDifficulty--;
-            countSpeedAtRows = countRows;
-            TetroMino.fallspeed = 1.0f - (0.15f * speedDifficulty);
+            countSpeedAtRows = countRows;            
         }
+        nextTetromino.GetComponent<TetroMino>().fallspeed = 1.1f - (0.15f * speedDifficulty);
         
     }
         
@@ -89,7 +97,6 @@ public class Game : MonoBehaviour
 
     public void SpawnNextTetromino()        //спавн Tetromino написано по видеоуроку, превью сделано по аналогии 
     {
-        GameObject nextTetromino;
         if (isStart)
         {
             nextTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);
@@ -260,7 +267,7 @@ public class Game : MonoBehaviour
 
     public void GameOver()
     {
-        TetroMino.fallspeed = 1.6f;
+        //TetroMino.fallspeed = 1.6f;
         SceneManager.LoadScene("GameOver");
         //Application.LoadLevel("GameOver");
     }
