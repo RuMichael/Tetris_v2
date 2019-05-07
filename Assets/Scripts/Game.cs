@@ -18,6 +18,8 @@ public class Game : MonoBehaviour
     #endregion
 
     #region //variable
+
+    bool isDone = false;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
     int numberOfRowsThisTurn = 0;
     int currentScore = 0;
@@ -38,7 +40,8 @@ public class Game : MonoBehaviour
 
 
     void Start()
-    {        
+    {      
+        isDone=false;
         numberOfRowsThisTurn = 0;
         currentScore = 0;
         countRows = 0;
@@ -270,9 +273,24 @@ public class Game : MonoBehaviour
         return false;
     }
 
+    public bool IsDone
+    {
+        get{
+            return isDone;
+        }
+        set{
+            isDone = value;
+            if(value)
+            {
+                nextTetromino.enabled = false;
+                enabled = false;
+            }
+        }
+    }
+
     public void GameOver()
     {
-        SceneManager.LoadScene("GameOver");
+        IsDone = true;
     }
 
     #endregion

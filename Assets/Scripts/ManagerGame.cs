@@ -53,11 +53,26 @@ public class ManagerGame : MonoBehaviour
         hub_rows1.text = game1.GetCompletedRows;
         hub_difficulty1.text = game1.GetDifficulty;
 
-        if(player2!=null)
+        if(game2 != null)
         {
             hub_score2.text = game2.GetScore;
             hub_rows2.text = game2.GetCompletedRows;
             hub_difficulty2.text = game2.GetDifficulty;
         }
+        GameOver();
+    }
+
+    void GameOver()
+    {
+        if(game2 == null)
+        {
+            if (game1.IsDone)
+                SceneManager.LoadScene("GameOver");
+        }
+        else
+            if(game1.IsDone && game2.IsDone)
+                SceneManager.LoadScene("GameOver");
+
+
     }
 }
