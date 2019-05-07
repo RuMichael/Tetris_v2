@@ -13,6 +13,15 @@ public class MenuStartGame : MonoBehaviour
     }
     public void PlayTogether()
     {
+        int[] array = {1,2,3,4};
+        List<int> list = new List<int> {1,2,3,4};
+        Dictionary<byte,int> dict = new Dictionary<byte, int> {
+            {1,2},
+            {3,4},
+            {5,6},
+        };
+
+
         Dictionary<byte,KeyCode> control = new Dictionary<byte,KeyCode>(4);
         control.Add(1, KeyCode.UpArrow);
         control.Add(2, KeyCode.LeftArrow);

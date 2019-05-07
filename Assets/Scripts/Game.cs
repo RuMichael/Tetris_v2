@@ -100,7 +100,7 @@ public class Game : MonoBehaviour
     {
         if (isStart)
         {
-            GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
+            GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
             nextTetromino = next.GetComponent<TetroMino>();
             nextTetromino.SetGame = this;
             GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition, 15.0f), Quaternion.identity);
@@ -132,7 +132,7 @@ public class Game : MonoBehaviour
 
     public string GetScore
     {
-        get{ return "Score: \n" + currentScore.ToString();}
+        get{ return "Score: \n" + currentScore;}
     }    
     public string GetDifficulty
     {
