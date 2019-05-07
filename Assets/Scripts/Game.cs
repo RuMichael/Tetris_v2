@@ -36,6 +36,11 @@ public class Game : MonoBehaviour
     
     public int changeGridPosition = 0;
 
+    public Text hub_Score;
+    public Text hub_Difficulty;
+    public Text hub_CompletedRows;
+
+
     #endregion
 
 
@@ -100,10 +105,13 @@ public class Game : MonoBehaviour
     {
         if (isStart)
         {
+
             GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
+            next.transform.parent = transform;
             nextTetromino = next.GetComponent<TetroMino>();
             nextTetromino.SetGame = this;
             GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition, 15.0f), Quaternion.identity);
+            preview.transform.parent = transform;
             previewTetromino = preview.GetComponent<TetroMino>();     
             previewTetromino.enabled = false;     
             isStart = false;
@@ -116,7 +124,8 @@ public class Game : MonoBehaviour
             nextTetromino.transform.position = new Vector2(4.0f+changeGridPosition, 20.0f);
 
             GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition, 15.0f), Quaternion.identity);
-            previewTetromino = preview.GetComponent<TetroMino>();     
+            previewTetromino = preview.GetComponent<TetroMino>();
+            preview.transform.parent = transform;
             previewTetromino.enabled = false;  
         }
     }
@@ -127,7 +136,15 @@ public class Game : MonoBehaviour
     void Update()
     {
         UpdateScore();
+        UpdateUI();
         UpdateDifficultySpeed();
+    }
+
+    void UpdateUI()
+    {
+        hub_Score.text = GetScore;
+        hub_Difficulty.text = GetDifficulty;
+        hub_CompletedRows.text = GetCompletedRows;
     }
 
     public string GetScore

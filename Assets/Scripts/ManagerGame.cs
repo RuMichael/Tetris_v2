@@ -13,15 +13,15 @@ public class ManagerGame : MonoBehaviour
     Game game1;
     Game game2;
 
-    public Text hub_score1;
-    public Text hub_rows1;
-    public Text hub_difficulty1;
-    public Text hub_name1;
+    //public Text hub_score1;
+    //public Text hub_rows1;
+    //public Text hub_difficulty1;
+    //public Text hub_name1;
 
-    public Text hub_score2;
-    public Text hub_rows2;
-    public Text hub_difficulty2;
-    public Text hub_name2;
+    //public Text hub_score2;
+    //public Text hub_rows2;
+    //public Text hub_difficulty2;
+    //public Text hub_name2;
 
     void Start()
     {
@@ -39,26 +39,27 @@ public class ManagerGame : MonoBehaviour
             game2 = game.GetComponent<Game>(); 
             startPosition = 24;
             game2.GoStart(player2, startPosition);            
-        }else
-        {   
-            hub_name2.text = "";
-            hub_score2.text = "";
-            hub_rows2.text = "";
-            hub_difficulty2.text = "";
         }
+        //else
+        //{   
+        //    hub_name2.text = "";
+        //    hub_score2.text = "";
+        //    hub_rows2.text = "";
+        //    hub_difficulty2.text = "";
+        //}
     }
     void Update()
     {
-        hub_score1.text = game1.GetScore;
-        hub_rows1.text = game1.GetCompletedRows;
-        hub_difficulty1.text = game1.GetDifficulty;
+        //hub_score1.text = game1.GetScore;
+        //hub_rows1.text = game1.GetCompletedRows;
+        //hub_difficulty1.text = game1.GetDifficulty;
 
-        if(game2 != null)
-        {
-            hub_score2.text = game2.GetScore;
-            hub_rows2.text = game2.GetCompletedRows;
-            hub_difficulty2.text = game2.GetDifficulty;
-        }
+        //if(game2 != null)
+        //{
+        //    hub_score2.text = game2.GetScore;
+        //    hub_rows2.text = game2.GetCompletedRows;
+        //    hub_difficulty2.text = game2.GetDifficulty;
+        //}
         GameOver();
     }
 
