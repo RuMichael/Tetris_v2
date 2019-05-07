@@ -13,12 +13,23 @@ public class MenuStartGame : MonoBehaviour
     }
     public void PlayTogether()
     {
-        Player.SoloGame = false;
-        SceneManager.LoadScene("Level");
+        Dictionary<byte,KeyCode> control = new Dictionary<byte,KeyCode>(4);
+        control.Add(1, KeyCode.UpArrow);
+        control.Add(2, KeyCode.LeftArrow);
+        control.Add(3, KeyCode.DownArrow);
+        control.Add(4, KeyCode.RightArrow);
+        Player player = new Player("Vasya", control);
+        PlaySolo();
+        //SceneManager.LoadScene("Level");
     }
     public void PlaySolo()
     {
-        Player.SoloGame = true;
+        Dictionary<byte,KeyCode> control = new Dictionary<byte,KeyCode>(4);
+        control.Add(1, KeyCode.W);
+        control.Add(2, KeyCode.A);
+        control.Add(3, KeyCode.S);
+        control.Add(4, KeyCode.D);
+        Player player = new Player("Misha", control);
         SceneManager.LoadScene("Level");
     }
 }

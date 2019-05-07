@@ -5,17 +5,21 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Game : MonoBehaviour
-{
-    byte players = 0;
+{    
+    #region //const
     public const int GridHeight = 20;
     public const int GridWeight = 10;
-    public Transform[,] grid = new Transform[GridWeight, GridHeight];
+    
 
     public const int scoreOneRow = 10;
     public const int scoreTwoRow = 30;
     public const int scoreThreeRow = 80;
     public const int scoreFourRow = 200;
+    #endregion
 
+    #region //variable
+    //byte players = 0;
+    public Transform[,] grid = new Transform[GridWeight, GridHeight];
     int numberOfRowsThisTurn = 0;
     int currentScore = 0;
     int countRows = 0;
@@ -23,34 +27,24 @@ public class Game : MonoBehaviour
     int countSpeedAtRows = 0;
 
     bool isStart = true;
-    GameObject previewTetromino;
-    GameObject nextTetromino;
+
+    TetroMino previewTetromino;
+    TetroMino nextTetromino;
 
     public Text hub_score;
     public Text hub_rows;
     public Text hub_difficulty;
+
+    public Player player;
     
-    public byte GetPlayers
-    {
-        get{
-            return players;
-        }
-    }
+    public int changeGridPosition = 0;
+
+    #endregion
+
 
     void Start()
-    {
-        if (Player.SoloGame)
-            players = 1;
-        else
-            players = 2;
-        SpawnNextTetromino();
-        if (players == 2)
-        {
-            FindObjectOfType<Camera>().transform.localPosition+= new Vector3(9,0,0);
-            hub_score.transform.localPosition+= new Vector3(-430,0,0);
-            hub_rows.transform.localPosition+= new Vector3(-430,0,0);
-            hub_difficulty.transform.localPosition+= new Vector3(-430,0,0);
-        }
+    {        
+        //SpawnNextTetromino();
     }    
 
     void UpdateDifficultySpeed()
@@ -65,7 +59,7 @@ public class Game : MonoBehaviour
             speedDifficulty--;
             countSpeedAtRows = countRows;            
         }
-        nextTetromino.GetComponent<TetroMino>().fallspeed = 1.1f - (0.15f * speedDifficulty);
+        nextTetromino.fallspeed = 1.1f - (0.15f * speedDifficulty);
     }
         
     void UpdateScore()
@@ -97,21 +91,24 @@ public class Game : MonoBehaviour
     {
         if (isStart)
         {
-            nextTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);
-            nextTetromino.GetComponent<TetroMino>().SetGame=this;
-            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
-            previewTetromino.GetComponent<TetroMino>().enabled = false;     
+            GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);
+            nextTetromino = next.GetComponent<TetroMino>();
+            nextTetromino.SetGame = this;
+            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
+            previewTetromino = preview.GetComponent<TetroMino>();     
+            previewTetromino.enabled = false;     
             isStart = false;
         }
         else
         {
             nextTetromino = previewTetromino;
-            nextTetromino.GetComponent<TetroMino>().SetGame = this;
-            nextTetromino.GetComponent<TetroMino>().enabled = true;
+            nextTetromino.SetGame = this;
+            nextTetromino.enabled = true;
             nextTetromino.transform.position = new Vector2(4.0f, 20.0f);
 
-            previewTetromino = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
-            previewTetromino.GetComponent<TetroMino>().enabled = false;
+            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
+            previewTetromino = preview.GetComponent<TetroMino>();     
+            previewTetromino.enabled = false;  
         }
     }
     

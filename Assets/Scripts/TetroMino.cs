@@ -9,12 +9,16 @@ public class TetroMino : MonoBehaviour
     public bool LimitRotation;
     Game game;  
 
-    byte players=0;
+    Dictionary<byte,KeyCode> control;
+    //up    - 1
+    //down  - 3
+    //left  - 2 
+    //right - 4
     public Game SetGame
     {
         set {
             game = value;
-            players = game.GetPlayers;
+            control = game.player.GetControl;
         }
     }
     float fall = 0;
@@ -32,27 +36,27 @@ public class TetroMino : MonoBehaviour
     }
     void CheckUserInput()  // работа с кнопками
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || ((Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))&& Time.time - moving >= 0.065f ))
+        if (Input.GetKeyDown(control[2]) || (Input.GetKey(control[2]) && Time.time - moving >= 0.085f ))
         {
             moving = Time.time;
             MoveLeft();
 
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || ((Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) && Time.time - moving >= 0.065f))
+        else if (Input.GetKeyDown(control[4]) || (Input.GetKey(control[4]) && Time.time - moving >= 0.085f ))
         {
             
             moving = Time.time;
             MoveRight();            
 
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
+        else if (Input.GetKeyDown(control[1]))
         {
             if (AllowRotation)
             {
                 RotateTetromino();
             }
         }
-        else if ((Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S)) || Time.time - fall >= fallspeed || ((Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) && Time.time - moving >= 0.035f))
+        else if (Input.GetKeyDown(control[3]) || Time.time - fall >= fallspeed || (Input.GetKey(control[3]) && Time.time - moving >= 0.035f))
         {
             moving = Time.time;
             MoveDown();
