@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    static List<Player> Players = new List<Player>();
+    public static List<Player> Players = new List<Player>();
     string name;
     Dictionary<byte,KeyCode> control = new Dictionary<byte,KeyCode>(4);
     public static int GetCount
@@ -26,12 +26,28 @@ public class Player : MonoBehaviour
     }
     public static Player GetPlayer()
     {        
-        Player tmp = null;
-        foreach (var item in Players)
-                tmp = item;
-        if(tmp != null)
-            Players.Remove(tmp);
+        if (Players == null || GetCount == 0)
+            return null;
+        Player tmp = Players[GetCount - 1];
+        List<Player> tmpPlayers = new List<Player>();
+        for (int i=0;i<GetCount-1;i++)
+            tmpPlayers.Add(Players[i]);
+        if (GetCount == 1)
+            Players=null;
+        else
+        {
+            Players.Clear();
+            Players = tmpPlayers;
+        }
         return tmp;
+    }
+
+    public static void ClearList()
+    {
+        if(Players == null)
+            Players = new List<Player>();
+        else
+            Players.Clear();
     }
     public Player(string name, Dictionary<byte,KeyCode> control)
     {

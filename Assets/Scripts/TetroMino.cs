@@ -197,7 +197,7 @@ public class TetroMino : MonoBehaviour
     }
     float CheckMinX()       //найти минимальное значение позиции тетромино по "х"
     {
-        float minPosX = 10f;
+        float minPosX = 10f+game.changeGridPosition;
         foreach (Transform mino in transform)
             if (mino.position.x < minPosX)
                 minPosX = mino.position.x;
@@ -206,7 +206,7 @@ public class TetroMino : MonoBehaviour
     }
     float CheckMaxX()       //найти максимальное значение позиции тетромино по "у"
     {
-        float maxPosX = 0;
+        float maxPosX = 0+game.changeGridPosition;
         foreach (Transform mino in transform)
             if (mino.position.x > maxPosX)
                 maxPosX = mino.position.x;

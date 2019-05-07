@@ -7,9 +7,8 @@ public class MenuSystem : MonoBehaviour
 {
     public void PlayAgain()
     {
+        Player.ClearList();
         SceneManager.LoadScene("StartGame");
-        //DontDestroyOnLoad(player1);
-        //DontDestroyOnLoad(player2);
     }    
     
 }

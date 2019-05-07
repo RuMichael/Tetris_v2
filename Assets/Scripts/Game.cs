@@ -18,7 +18,6 @@ public class Game : MonoBehaviour
     #endregion
 
     #region //variable
-    //byte players = 0;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
     int numberOfRowsThisTurn = 0;
     int currentScore = 0;
@@ -31,10 +30,6 @@ public class Game : MonoBehaviour
     TetroMino previewTetromino;
     TetroMino nextTetromino;
 
-    public Text hub_score;
-    public Text hub_rows;
-    public Text hub_difficulty;
-
     public Player player;
     
     public int changeGridPosition = 0;
@@ -44,7 +39,11 @@ public class Game : MonoBehaviour
 
     void Start()
     {        
-        //SpawnNextTetromino();
+        numberOfRowsThisTurn = 0;
+        currentScore = 0;
+        countRows = 0;
+        speedDifficulty = 1;
+        countSpeedAtRows = 0;
     }    
 
     void UpdateDifficultySpeed()
@@ -60,6 +59,13 @@ public class Game : MonoBehaviour
             countSpeedAtRows = countRows;            
         }
         nextTetromino.fallspeed = 1.1f - (0.15f * speedDifficulty);
+    }
+
+    public void GoStart(Player player, int position)
+    {
+        this.player = player;
+        changeGridPosition = position;
+        SpawnNextTetromino();   
     }
         
     void UpdateScore()
@@ -91,10 +97,10 @@ public class Game : MonoBehaviour
     {
         if (isStart)
         {
-            GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f, 20.0f), Quaternion.identity);
+            GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
             nextTetromino = next.GetComponent<TetroMino>();
             nextTetromino.SetGame = this;
-            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
+            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition, 15.0f), Quaternion.identity);
             previewTetromino = preview.GetComponent<TetroMino>();     
             previewTetromino.enabled = false;     
             isStart = false;
@@ -104,9 +110,9 @@ public class Game : MonoBehaviour
             nextTetromino = previewTetromino;
             nextTetromino.SetGame = this;
             nextTetromino.enabled = true;
-            nextTetromino.transform.position = new Vector2(4.0f, 20.0f);
+            nextTetromino.transform.position = new Vector2(4.0f+changeGridPosition, 20.0f);
 
-            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(16.0f, 15.0f), Quaternion.identity);
+            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition, 15.0f), Quaternion.identity);
             previewTetromino = preview.GetComponent<TetroMino>();     
             previewTetromino.enabled = false;  
         }
@@ -118,16 +124,22 @@ public class Game : MonoBehaviour
     void Update()
     {
         UpdateScore();
-        UpdateUI();
         UpdateDifficultySpeed();
     }
 
-    void UpdateUI()
+    public string GetScore
     {
-        hub_score.text = "Score: \n" + currentScore.ToString();
-        hub_difficulty.text = "Difficulty: \n" + speedDifficulty.ToString();
-        hub_rows.text = "Completed Rows:\n" + countRows.ToString();
+        get{ return "Score: \n" + currentScore.ToString();}
+    }    
+    public string GetDifficulty
+    {
+        get{ return "Difficulty: \n" + speedDifficulty.ToString();}
     }
+    public string GetCompletedRows
+    {
+        get{ return "Completed Rows:\n" + countRows.ToString();}
+    }
+
 
     bool IsFullRowAt(int y)     //проверяем заполнена ли строка "у" в grid
     {
@@ -190,7 +202,7 @@ public class Game : MonoBehaviour
         {
             Vector2 pos = Round(mino.position);
             if (pos.y < GridHeight)
-                grid[(int)pos.x, (int)pos.y] = mino;
+                grid[(int)pos.x-changeGridPosition, (int)pos.y] = mino;
         }
     }
 
@@ -199,13 +211,13 @@ public class Game : MonoBehaviour
         if (pos.y > GridHeight - 1)
             return null;
         else
-            return grid[(int)pos.x, (int)pos.y];
+            return grid[(int)pos.x-changeGridPosition, (int)pos.y];
     }
 
     
     public bool CheckIsInsideGrid(Vector2 position)     //проверка на превышение границ Grid
     {
-        return ((int)position.x >= 0 && (int)position.y >= 0 && (int)position.x < GridWeight);
+        return ((int)position.x >= 0+changeGridPosition && (int)position.y >= 0 && (int)position.x < GridWeight+changeGridPosition);
     }
 
     public Vector2 Round(Vector2 position)      //выравниваем до четных чисел Vector2, передаем новый элемент

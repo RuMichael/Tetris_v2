@@ -18,9 +18,8 @@ public class MenuStartGame : MonoBehaviour
         control.Add(2, KeyCode.LeftArrow);
         control.Add(3, KeyCode.DownArrow);
         control.Add(4, KeyCode.RightArrow);
-        Player player = new Player("Vasya", control);
+        new Player("Vasya", control);
         PlaySolo();
-        //SceneManager.LoadScene("Level");
     }
     public void PlaySolo()
     {
@@ -29,7 +28,7 @@ public class MenuStartGame : MonoBehaviour
         control.Add(2, KeyCode.A);
         control.Add(3, KeyCode.S);
         control.Add(4, KeyCode.D);
-        Player player = new Player("Misha", control);
+        new Player("Misha", control);
         SceneManager.LoadScene("Level");
     }
 }
