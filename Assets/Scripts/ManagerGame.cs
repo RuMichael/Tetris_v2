@@ -6,17 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class ManagerGame : MonoBehaviour
 {
-
-    Player player1 = null;
-    Player player2 = null;
-
-    Game game1;
-    Game game2;
-
     List<Game> games = new List<Game>();
-
     public Transform startPosition;
-
 
     void Start()
     {

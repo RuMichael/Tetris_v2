@@ -8,23 +8,26 @@ public class Game : MonoBehaviour
 {    
     public struct Point
     {
-    public float i;
-    public float j;
+        public float i;
+        public float j;
     }
 
     #region //const
     public const int GridHeight = 20;
     public const int GridWeight = 10;
-    
-
-    public const int scoreOneRow = 10;
-    public const int scoreTwoRow = 30;
-    public const int scoreThreeRow = 80;
-    public const int scoreFourRow = 200;
     #endregion
-
+    
     #region //variable
-
+    public int[] scoreRow = {10, 30, 80, 200};  
+    public string prefab = "Prefabs/";
+    public string[] prefabsName = {
+            "Tetromino_I",
+            "Tetromino_J",
+            "Tetromino_L",
+            "Tetromino_O",
+            "Tetromino_S",
+            "Tetromino_T",
+            "Tetromino_Z"};
     bool isDone = false;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
     int numberOfRowsThisTurn = 0;
@@ -34,6 +37,8 @@ public class Game : MonoBehaviour
     int countSpeedAtRows = 0;
 
     bool isStart = true;
+
+    
 
     TetroMino previewTetromino;
     TetroMino nextTetromino;
@@ -84,27 +89,12 @@ public class Game : MonoBehaviour
         
     void UpdateScore()
     {
-        switch (numberOfRowsThisTurn)
+        if (numberOfRowsThisTurn>0 && numberOfRowsThisTurn<=4)
         {
-            case 1:
-                currentScore += scoreOneRow;
-                countRows += 1;
-                break;
-            case 2:
-                currentScore += scoreTwoRow;
-                countRows += 2;
-                break;
-            case 3:
-                currentScore += scoreThreeRow;
-                countRows += 3;
-                break;
-            case 4:
-                currentScore += scoreFourRow;
-                countRows += 4;
-                break;
+            currentScore += scoreRow[numberOfRowsThisTurn-1];
+            countRows += numberOfRowsThisTurn;
         }
         numberOfRowsThisTurn = 0;
-
     }
 
     public void SpawnNextTetromino()        //спавн Tetromino написано по видеоуроку, превью сделано по аналогии 
@@ -124,8 +114,7 @@ public class Game : MonoBehaviour
         }
         else
         {
-            nextTetromino = previewTetromino;
-            //changeGridPosition = new Vector2(transform.position.x - 4, transform.position.y - 20);  
+            nextTetromino = previewTetromino; 
             nextTetromino.SetGame = this;
             nextTetromino.enabled = true;
             nextTetromino.transform.parent = transform;
@@ -149,24 +138,10 @@ public class Game : MonoBehaviour
 
     void UpdateUI()
     {
-        hub_Score.text = GetScore;
-        hub_Difficulty.text = GetDifficulty;
-        hub_CompletedRows.text = GetCompletedRows;
+        hub_Score.text = "Score: \n" + currentScore;;
+        hub_Difficulty.text = "Difficulty: \n" + speedDifficulty.ToString();;
+        hub_CompletedRows.text = "Completed Rows:\n" + countRows.ToString();;
     }
-
-    public string GetScore
-    {
-        get{ return "Score: \n" + currentScore;}
-    }    
-    public string GetDifficulty
-    {
-        get{ return "Difficulty: \n" + speedDifficulty.ToString();}
-    }
-    public string GetCompletedRows
-    {
-        get{ return "Completed Rows:\n" + countRows.ToString();}
-    }
-
 
     bool IsFullRowAt(int y)     //проверяем заполнена ли строка "у" в grid
     {
@@ -183,8 +158,7 @@ public class Game : MonoBehaviour
         {
             Destroy(grid[x, y].gameObject);
             grid[x, y] = null;
-        }
-        
+        }        
     }
 
     void MoveRowDown(int y)     // отпустить строку на 1 позицию
@@ -201,8 +175,7 @@ public class Game : MonoBehaviour
     void MoveAllRowDown(int y)  // отпустить все строки с позиции "у"
     {
         for (int i = y; i < GridHeight; i++)        
-            MoveRowDown(i);
-        
+            MoveRowDown(i);        
     }
 
     public void DeleteRow()
@@ -213,8 +186,7 @@ public class Game : MonoBehaviour
                 DeleteMinoAt(y);
                 MoveAllRowDown(y + 1);
                 --y;
-            }
-        
+            }        
     }
 
     public void UpdateGrid(TetroMino tetroMino)         //запись в Grid новых Tetromino
@@ -254,35 +226,8 @@ public class Game : MonoBehaviour
 
     string GetRandomTetromino()     //рандомный выбор tetromino для спавна 
     {
-        string randomTetrominoName = "";
-        int randomTetromino = Random.Range(1, 8);
-
-        switch (randomTetromino)
-        {
-            case 1:
-                randomTetrominoName = "Prefabs/Tetromino_I";
-                break;
-            case 2:
-                randomTetrominoName = "Prefabs/Tetromino_J";                                              
-                break;
-            case 3:
-                randomTetrominoName = "Prefabs/Tetromino_L";
-                break;
-            case 4:
-                randomTetrominoName = "Prefabs/Tetromino_O";
-                break;
-            case 5:
-                randomTetrominoName = "Prefabs/Tetromino_S";
-                break;
-            case 6:
-                randomTetrominoName = "Prefabs/Tetromino_T";
-                break;
-            case 7:
-                randomTetrominoName = "Prefabs/Tetromino_Z";
-                break;
-        }
-
-        return randomTetrominoName;
+        int randomTetromino = Random.Range(0, 7);
+        return prefab + prefabsName[randomTetromino];
     }
 
     public bool CheckIsAboveGrid(TetroMino tetromino)
