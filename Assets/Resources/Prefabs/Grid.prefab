@@ -103,7 +103,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 407195977333857135}
   m_LocalRotation: {x: 0, y: 0.002181689, z: 0, w: 0.9999976}
-  m_LocalPosition: {x: 0, y: 0, z: -0.10993808}
+  m_LocalPosition: {x: 0, y: 0, z: -0.10902181}
   m_LocalScale: {x: 1, y: 1, z: 0}
   m_Children:
   - {fileID: 1249318905672002920}
@@ -111,14 +111,15 @@ RectTransform:
   - {fileID: 6682534286236183647}
   - {fileID: 8060306097418028275}
   - {fileID: 8545796847458612027}
+  - {fileID: 9041094272904400934}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0.25, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 568.11005, y: 267.45}
-  m_SizeDelta: {x: 24, y: 22}
-  m_Pivot: {x: -0.07, y: 0.27}
+  m_AnchoredPosition: {x: 567.9, y: 267.45}
+  m_SizeDelta: {x: 21, y: 22}
+  m_Pivot: {x: -0.08, y: 0.27}
 --- !u!1 &591558644901568677
 GameObject:
   m_ObjectHideFlags: 0
@@ -2358,7 +2359,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4854495019588687631}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 15, z: 0}
+  m_LocalPosition: {x: 7.2, y: 15.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6858116936048375107}
@@ -2377,11 +2378,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  changeGridPosition: 0
+  changeGridPosition: {x: 0, y: 0}
   hub_Score: {fileID: 1076324522403343408}
   hub_Difficulty: {fileID: 7848765967846298414}
   hub_CompletedRows: {fileID: 8230970481074790295}
-  startSpawnTetromino: {fileID: 0}
+  previewTetrominoTransform: {fileID: 9041094272904400934}
 --- !u!1 &4971122106154858105
 GameObject:
   m_ObjectHideFlags: 0
@@ -2658,8 +2659,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 18, y: 11}
-  m_SizeDelta: {x: 510, y: 980}
+  m_AnchoredPosition: {x: 16.56, y: 11}
+  m_SizeDelta: {x: 400, y: 980}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6719557073839570458
 Canvas:
@@ -3318,6 +3319,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &6306629892333944407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9041094272904400934}
+  m_Layer: 0
+  m_Name: PreviewTetrominoTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9041094272904400934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6306629892333944407}
+  m_LocalRotation: {x: -0, y: -0.002181689, z: -0, w: 0.9999976}
+  m_LocalPosition: {x: 17.14, y: 10.83, z: 0}
+  m_LocalScale: {x: 0.9999809, y: 1, z: 0.000019038978}
+  m_Children: []
+  m_Father: {fileID: 6858116936048375107}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6317315197469089113
 GameObject:
   m_ObjectHideFlags: 0

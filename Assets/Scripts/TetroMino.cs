@@ -95,7 +95,7 @@ public class TetroMino : MonoBehaviour
     {
         foreach (Transform mino in transform)
         {
-            Vector2 pos = game.Round(mino.position);
+            Game.Point pos = game.ReverseVector(mino.position);
             if (!game.CheckIsInsideGrid(pos))
                 return false;
             if (game.GetTransformAtGridPosition(pos) != null && game.GetTransformAtGridPosition(pos).parent != transform)
@@ -126,8 +126,8 @@ public class TetroMino : MonoBehaviour
         transform.position += new Vector3(centerPositionX - tmpCenterPositionX, 0, 0); // смещаем положение по х, но ориентируемся на центр тетромино
 
         if (!CheckIsVallidPosition(out minoError))
-        {
-            if (!PositionOffset(minoError.position.x))
+        {            
+            if (!PositionOffset(game.ReverseVector(minoError.position).i))
             {
                 transform.position -= new Vector3(centerPositionX - tmpCenterPositionX, 0, 0);
                 transform.position -= new Vector3(0, minPositionY - tmpMinPositionY, 0);
@@ -170,41 +170,47 @@ public class TetroMino : MonoBehaviour
     {
         float minPosY = 20f;
         foreach (Transform mino in transform)
-            if (mino.position.y < minPosY)
-                minPosY = mino.position.y;
+        {
+            Game.Point minoP = game.ReverseVector(mino.position);
+            if (minoP.j < minPosY)
+                minPosY = minoP.j;
+        }
 
         return minPosY;
     } 
-    float CheckCenterX()    //найти центральное(округленное до целого) значение позиции тетромино по "х"
+    int CheckCenterX()    //найти центральное(округленное до целого) значение позиции тетромино по "х"
     {
         float[] centerPosX = new float[4];
-        int i = 0;
         float result = 0;
         foreach (Transform mino in transform)
         {
-            centerPosX[i] = mino.position.x;
-            i++;
+            Game.Point minoP = game.ReverseVector(mino.position);
+            result += minoP.i;
         }
-        for (i = 0; i < centerPosX.Length; i++)
-            result += centerPosX[i];
 
-        return Mathf.Round(result / 4f);
+        return (int)Mathf.Round(result / 4f);
     }
     float CheckMinX()       //найти минимальное значение позиции тетромино по "х"
     {
-        float minPosX = 10f+game.changeGridPosition;
+        float minPosX = 10f/*+game.changeGridPosition.x*/;
         foreach (Transform mino in transform)
-            if (mino.position.x < minPosX)
+        {
+            Game.Point minoP = game.ReverseVector(mino.position);
+            if (minoP.i < minPosX)
                 minPosX = mino.position.x;
+        }
 
         return minPosX;
     }
     float CheckMaxX()       //найти максимальное значение позиции тетромино по "у"
     {
-        float maxPosX = 0+game.changeGridPosition;
+        float maxPosX = 0/*+game.changeGridPosition.x*/;
         foreach (Transform mino in transform)
-            if (mino.position.x > maxPosX)
-                maxPosX = mino.position.x;
+        {
+            Game.Point minoP = game.ReverseVector(mino.position);
+            if (minoP.i > maxPosX)
+                maxPosX = minoP.i;
+        }
 
         return maxPosX;
     }
@@ -213,7 +219,7 @@ public class TetroMino : MonoBehaviour
         foreach (Transform mino in transform)
         {
             minoError = mino;
-            Vector2 pos = game.Round(mino.position);
+            Game.Point pos = game.ReverseVector(mino.position);
             if (!game.CheckIsInsideGrid(pos))
                 return false;
             if (game.GetTransformAtGridPosition(pos) != null && game.GetTransformAtGridPosition(pos).parent != transform)

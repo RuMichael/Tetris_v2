@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {    
+    public struct Point
+    {
+    public float i;
+    public float j;
+    }
+
     #region //const
     public const int GridHeight = 20;
     public const int GridWeight = 10;
@@ -39,15 +45,15 @@ public class Game : MonoBehaviour
     public Text hub_Score;
     public Text hub_Difficulty;
     public Text hub_CompletedRows;
-
-    //public Transform startSpawnTetromino;   
+ 
+    public Transform previewTetrominoTransform;
 
     #endregion
 
 
     void Start()
     {      
-        isDone=false;
+        isDone = false;
         numberOfRowsThisTurn = 0;
         currentScore = 0;
         countRows = 0;
@@ -70,10 +76,9 @@ public class Game : MonoBehaviour
         nextTetromino.fallspeed = 1.1f - (0.15f * speedDifficulty);
     }
 
-    public void GoStart(Player player, int position)
+    public void GoStart(Player player)
     {
         this.player = player;
-        changeGridPosition.x = position;
         SpawnNextTetromino();   
     }
         
@@ -106,33 +111,28 @@ public class Game : MonoBehaviour
     {
         if (isStart)
         {
-
-            //GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
-            //GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
-            GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)),transform);    
-
+            GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), transform); 
             changeGridPosition = new Vector2(transform.position.x - 4, transform.position.y - 20);      
-           // next.transform.parent = transform;
             nextTetromino = next.GetComponent<TetroMino>();
-            //nextTetromino.transform.localPosition = new Vector3(4f,15f,0f);
             nextTetromino.SetGame = this;
 
-            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition.x, 15.0f), Quaternion.identity);
-            preview.transform.parent = transform;
+            GameObject preview = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), previewTetrominoTransform); 
             previewTetromino = preview.GetComponent<TetroMino>();     
-            previewTetromino.enabled = false;     
+            previewTetromino.enabled = false;  
+
             isStart = false;
         }
         else
         {
             nextTetromino = previewTetromino;
+            //changeGridPosition = new Vector2(transform.position.x - 4, transform.position.y - 20);  
             nextTetromino.SetGame = this;
             nextTetromino.enabled = true;
-            nextTetromino.transform.localPosition = new Vector2(4.0f+changeGridPosition.x, 20.0f);
+            nextTetromino.transform.parent = transform;
+            nextTetromino.transform.position = transform.position;
 
-            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition.x, 15.0f), Quaternion.identity);
-            previewTetromino = preview.GetComponent<TetroMino>();
-            preview.transform.parent = transform;
+            GameObject preview = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), previewTetrominoTransform); 
+            previewTetromino = preview.GetComponent<TetroMino>();     
             previewTetromino.enabled = false;  
         }
     }
@@ -194,7 +194,7 @@ public class Game : MonoBehaviour
             {
                 grid[x, y - 1] = grid[x, y];
                 grid[x, y] = null;
-                grid[x, y - 1].position += new Vector3(0,-1,0);
+                grid[x, y - 1].position += Vector3.down;
             }        
     }
 
@@ -227,29 +227,29 @@ public class Game : MonoBehaviour
                     
         foreach (Transform mino in tetroMino.transform)
         {
-            Vector2 pos = Round(mino.position);
-            if (pos.y < GridHeight)
-                grid[(int)pos.x-changeGridPosition.x, (int)pos.y] = mino;
+            Point pos = ReverseVector(mino.position);
+            if (pos.j < GridHeight)
+                grid[(int)pos.i, (int) pos.j] = mino;
         }
     }
 
-    public Transform GetTransformAtGridPosition(Vector2 pos)  // возвращает значение из grid по значению Vector2
+    public Transform GetTransformAtGridPosition(Point pos)  // возвращает значение из grid по значению Vector2
     {
-        if (pos.y > GridHeight - 1)
+        if (pos.j > GridHeight - 1)
             return null;
         else
-            return grid[(int)(pos.x-changeGridPosition.x), (int)(pos.y-changeGridPosition.y)];
+            return grid[(int) pos.i, (int) pos.j];
     }
 
     
-    public bool CheckIsInsideGrid(Vector2 position)     //проверка на превышение границ Grid
+    public bool CheckIsInsideGrid(Point position)     //проверка на превышение границ Grid
     {
-        return ((int)position.x >= 0+changeGridPosition.x && (int)position.y >= 0 && (int)position.x < GridWeight+changeGridPosition.x);
+        return (position.i >= 0 && position.j >= 0 && position.i < GridWeight);
     }
 
-    public Vector2 Round(Vector2 position)      //выравниваем до четных чисел Vector2, передаем новый элемент
+    public Point ReverseVector(Vector2 position)      //
     {
-        return new Vector2(Mathf.Round(position.x-changeGridPosition.y), Mathf.Round(position.y-changeGridPosition.y));
+        return new Point{ i =  Mathf.Round(position.x - changeGridPosition.x), j =  Mathf.Round(position.y - changeGridPosition.y)};
     }
 
     string GetRandomTetromino()     //рандомный выбор tetromino для спавна 
@@ -289,8 +289,8 @@ public class Game : MonoBehaviour
     {
             foreach (Transform mino in tetromino.transform)
             {
-                Vector2 pos = Round(mino.position);
-                if (pos.y > GridHeight - 1)
+                Point pos = ReverseVector(mino.position);
+                if (pos.j > GridHeight - 1)
                     return true;
             }
         
