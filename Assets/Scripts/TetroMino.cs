@@ -60,27 +60,27 @@ public class TetroMino : MonoBehaviour
     }
     void MoveLeft()
     {
-        transform.position += new Vector3(-1, 0, 0);
+        transform.position += Vector3.left;
         if (!CheckIsVallidPosition())
-            transform.position += new Vector3(1, 0, 0);
+            transform.position += Vector3.right;
         else
             game.UpdateGrid(this);
     }
     void MoveRight()
     {
-        transform.position += new Vector3(1, 0, 0);
+        transform.position += Vector3.right;
         if (!CheckIsVallidPosition())
-            transform.position += new Vector3(-1, 0, 0);
+            transform.position += Vector3.left;
         else
             game.UpdateGrid(this);
     }
     void MoveDown()
     {
-        transform.position += new Vector3(0, -1, 0);
+        transform.position += Vector3.down;
         fall = Time.time;
         if (!CheckIsVallidPosition())
         {
-            transform.position += new Vector3(0, 1, 0);
+            transform.position += Vector3.up;
             enabled = false;
             game.DeleteRow();
             if (game.CheckIsAboveGrid(this))
@@ -180,38 +180,34 @@ public class TetroMino : MonoBehaviour
     } 
     int CheckCenterX()    //найти центральное(округленное до целого) значение позиции тетромино по "х"
     {
-        float[] centerPosX = new float[4];
         float result = 0;
         foreach (Transform mino in transform)
         {
             Game.Point minoP = game.ReverseVector(mino.position);
             result += minoP.i;
         }
-
         return (int)Mathf.Round(result / 4f);
     }
     float CheckMinX()       //найти минимальное значение позиции тетромино по "х"
     {
-        float minPosX = 10f/*+game.changeGridPosition.x*/;
+        float minPosX = 10f;
         foreach (Transform mino in transform)
         {
             Game.Point minoP = game.ReverseVector(mino.position);
             if (minoP.i < minPosX)
                 minPosX = mino.position.x;
         }
-
         return minPosX;
     }
     float CheckMaxX()       //найти максимальное значение позиции тетромино по "у"
     {
-        float maxPosX = 0/*+game.changeGridPosition.x*/;
+        float maxPosX = 0;
         foreach (Transform mino in transform)
         {
             Game.Point minoP = game.ReverseVector(mino.position);
             if (minoP.i > maxPosX)
                 maxPosX = minoP.i;
         }
-
         return maxPosX;
     }
     bool CheckIsVallidPosition(out Transform minoError) //Проверяем возможность движения Tetromino, узнаем какая из mino была неверно установлена

@@ -28,6 +28,8 @@ public class Game : MonoBehaviour
             "Tetromino_S",
             "Tetromino_T",
             "Tetromino_Z"};
+    public int completedRowsForUpdateSpeed = 15;
+    public int maxLevelDifficulty = 5;    
     bool isDone = false;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
     int numberOfRowsThisTurn = 0;
@@ -68,7 +70,7 @@ public class Game : MonoBehaviour
 
     void UpdateDifficultySpeed()
     {
-        if ((countRows - countSpeedAtRows >= 15 || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < 5)
+        if ((countRows - countSpeedAtRows >= completedRowsForUpdateSpeed || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < maxLevelDifficulty)
         {
             speedDifficulty++;
             countSpeedAtRows = countRows;            
