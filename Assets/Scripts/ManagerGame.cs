@@ -25,19 +25,18 @@ public class ManagerGame : MonoBehaviour
 
     void Start()
     {
-        GameObject game = (GameObject)Instantiate(Resources.Load("Prefabs/GameMe", typeof(GameObject)), new Vector2(4.0f, 10.0f), Quaternion.identity);
-        game1 = game.GetComponent<Game>();            
-        player1 = Player.GetPlayer();
+        GameObject game = (GameObject)Instantiate(Resources.Load("Prefabs/Grid", typeof(GameObject)), new Vector2(-14f, 4.4f), Quaternion.identity);
+        game1 = game.GetComponentInChildren<Game>();        
+        player1 = Player.GetPlayerr();
         int startPosition = 0;
         game1.GoStart(player1, startPosition);
 
-        if(Player.Players != null && Player.GetCount != 0)
+        if(Player.GetCount != 0)
         {
-            player2 = Player.GetPlayer();
-            game = (GameObject)Instantiate(Resources.Load("Prefabs/Grid", typeof(GameObject)), new Vector2(20.8f, 4.4f), Quaternion.identity);
-            game = (GameObject)Instantiate(Resources.Load("Prefabs/GameMe", typeof(GameObject)), new Vector2(4.0f, 10.0f), Quaternion.identity);
-            game2 = game.GetComponent<Game>(); 
-            startPosition = 24;
+            player2 = Player.GetPlayerr();
+            game = (GameObject)Instantiate(Resources.Load("Prefabs/Grid", typeof(GameObject)), new Vector2(15.8f, 4.4f), Quaternion.identity);
+            game2 = game.GetComponentInChildren<Game>();    
+            startPosition = 0;
             game2.GoStart(player2, startPosition);            
         }
         //else

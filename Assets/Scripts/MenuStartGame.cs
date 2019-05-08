@@ -15,29 +15,29 @@ public class MenuStartGame : MonoBehaviour
     {
         int[] array = {1,2,3,4};
         List<int> list = new List<int> {1,2,3,4};
-        Dictionary<byte,int> dict = new Dictionary<byte, int> {
-            {1,2},
-            {3,4},
-            {5,6},
-        };
-
-
-        Dictionary<byte,KeyCode> control = new Dictionary<byte,KeyCode>(4);
-        control.Add(1, KeyCode.UpArrow);
-        control.Add(2, KeyCode.LeftArrow);
-        control.Add(3, KeyCode.DownArrow);
-        control.Add(4, KeyCode.RightArrow);
-        new Player("Vasya", control);
+        Player player = new Player();
+        player.AddPlayer("Player1", new Dictionary<Player.comand, KeyCode> {
+            {Player.comand.turn, KeyCode.UpArrow},
+            {Player.comand.left, KeyCode.LeftArrow},
+            {Player.comand.down, KeyCode.DownArrow},
+            {Player.comand.right, KeyCode.RightArrow}
+        });
         PlaySolo();
     }
     public void PlaySolo()
     {
-        Dictionary<byte,KeyCode> control = new Dictionary<byte,KeyCode>(4);
-        control.Add(1, KeyCode.W);
-        control.Add(2, KeyCode.A);
-        control.Add(3, KeyCode.S);
-        control.Add(4, KeyCode.D);
-        new Player("Misha", control);
+        Player player = new Player();
+        player.AddPlayer("Player2", new Dictionary<Player.comand, KeyCode> {
+            {Player.comand.turn, KeyCode.W},
+            {Player.comand.left, KeyCode.A},
+            {Player.comand.down, KeyCode.S},
+            {Player.comand.right, KeyCode.D},
+            /*{Player.comand.turn, KeyCode.UpArrow},
+            {Player.comand.left, KeyCode.LeftArrow},
+            {Player.comand.down, KeyCode.DownArrow},
+            {Player.comand.right, KeyCode.RightArrow}*/
+        });
+        
         SceneManager.LoadScene("Level");
     }
 }

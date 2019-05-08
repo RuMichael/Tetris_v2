@@ -34,12 +34,13 @@ public class Game : MonoBehaviour
 
     public Player player;
     
-    public int changeGridPosition = 0;
+    public Vector2 changeGridPosition;
 
     public Text hub_Score;
     public Text hub_Difficulty;
     public Text hub_CompletedRows;
 
+    //public Transform startSpawnTetromino;   
 
     #endregion
 
@@ -72,7 +73,7 @@ public class Game : MonoBehaviour
     public void GoStart(Player player, int position)
     {
         this.player = player;
-        changeGridPosition = position;
+        changeGridPosition.x = position;
         SpawnNextTetromino();   
     }
         
@@ -106,11 +107,17 @@ public class Game : MonoBehaviour
         if (isStart)
         {
 
-            GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
-            next.transform.parent = transform;
+            //GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
+            //GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(4.0f+changeGridPosition, 20.0f), Quaternion.identity);
+            GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)),transform);    
+
+            changeGridPosition = new Vector2(transform.position.x - 4, transform.position.y - 20);      
+           // next.transform.parent = transform;
             nextTetromino = next.GetComponent<TetroMino>();
+            //nextTetromino.transform.localPosition = new Vector3(4f,15f,0f);
             nextTetromino.SetGame = this;
-            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition, 15.0f), Quaternion.identity);
+
+            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition.x, 15.0f), Quaternion.identity);
             preview.transform.parent = transform;
             previewTetromino = preview.GetComponent<TetroMino>();     
             previewTetromino.enabled = false;     
@@ -121,9 +128,9 @@ public class Game : MonoBehaviour
             nextTetromino = previewTetromino;
             nextTetromino.SetGame = this;
             nextTetromino.enabled = true;
-            nextTetromino.transform.position = new Vector2(4.0f+changeGridPosition, 20.0f);
+            nextTetromino.transform.localPosition = new Vector2(4.0f+changeGridPosition.x, 20.0f);
 
-            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition, 15.0f), Quaternion.identity);
+            GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), new Vector2(13.0f+changeGridPosition.x, 15.0f), Quaternion.identity);
             previewTetromino = preview.GetComponent<TetroMino>();
             preview.transform.parent = transform;
             previewTetromino.enabled = false;  
@@ -222,7 +229,7 @@ public class Game : MonoBehaviour
         {
             Vector2 pos = Round(mino.position);
             if (pos.y < GridHeight)
-                grid[(int)pos.x-changeGridPosition, (int)pos.y] = mino;
+                grid[(int)pos.x-changeGridPosition.x, (int)pos.y] = mino;
         }
     }
 
@@ -231,18 +238,18 @@ public class Game : MonoBehaviour
         if (pos.y > GridHeight - 1)
             return null;
         else
-            return grid[(int)pos.x-changeGridPosition, (int)pos.y];
+            return grid[(int)(pos.x-changeGridPosition.x), (int)(pos.y-changeGridPosition.y)];
     }
 
     
     public bool CheckIsInsideGrid(Vector2 position)     //проверка на превышение границ Grid
     {
-        return ((int)position.x >= 0+changeGridPosition && (int)position.y >= 0 && (int)position.x < GridWeight+changeGridPosition);
+        return ((int)position.x >= 0+changeGridPosition.x && (int)position.y >= 0 && (int)position.x < GridWeight+changeGridPosition.x);
     }
 
     public Vector2 Round(Vector2 position)      //выравниваем до четных чисел Vector2, передаем новый элемент
     {
-        return new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
+        return new Vector2(Mathf.Round(position.x-changeGridPosition.y), Mathf.Round(position.y-changeGridPosition.y));
     }
 
     string GetRandomTetromino()     //рандомный выбор tetromino для спавна 

@@ -7,13 +7,9 @@ public class TetroMino : MonoBehaviour
 {
     public bool AllowRotation;
     public bool LimitRotation;
-    Game game;  
-
-    Dictionary<byte,KeyCode> control;
-    //up    - 1
-    //down  - 3
-    //left  - 2 
-    //right - 4
+    Game game;      
+    Dictionary<Player.comand,KeyCode> control;
+    
     public Game SetGame
     {
         set {
@@ -36,27 +32,27 @@ public class TetroMino : MonoBehaviour
     }
     void CheckUserInput()  // работа с кнопками
     {
-        if (Input.GetKeyDown(control[2]) || (Input.GetKey(control[2]) && Time.time - moving >= 0.085f ))
+        if (Input.GetKeyDown(control[Player.comand.left]) || (Input.GetKey(control[Player.comand.left]) && Time.time - moving >= 0.085f ))
         {
             moving = Time.time;
             MoveLeft();
 
         }
-        else if (Input.GetKeyDown(control[4]) || (Input.GetKey(control[4]) && Time.time - moving >= 0.085f ))
+        else if (Input.GetKeyDown(control[Player.comand.right]) || (Input.GetKey(control[Player.comand.right]) && Time.time - moving >= 0.085f ))
         {
             
             moving = Time.time;
             MoveRight();            
 
         }
-        else if (Input.GetKeyDown(control[1]))
+        else if (Input.GetKeyDown(control[Player.comand.turn]))
         {
             if (AllowRotation)
             {
                 RotateTetromino();
             }
         }
-        else if (Input.GetKeyDown(control[3]) || Time.time - fall >= fallspeed || (Input.GetKey(control[3]) && Time.time - moving >= 0.035f))
+        else if (Input.GetKeyDown(control[Player.comand.down]) || Time.time - fall >= fallspeed || (Input.GetKey(control[Player.comand.down]) && Time.time - moving >= 0.035f))
         {
             moving = Time.time;
             MoveDown();
@@ -118,7 +114,6 @@ public class TetroMino : MonoBehaviour
 
         float minPositionY = CheckMinY();
         float tmpMinPositionY;
-
         if (LimitRotation && transform.rotation.eulerAngles.z >= 90)
             transform.Rotate(0, 0, -90);
         else

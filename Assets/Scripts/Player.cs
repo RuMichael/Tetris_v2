@@ -4,27 +4,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static List<Player> Players = new List<Player>();
+    public enum comand
+    {
+        left,right,turn,down,speedUp,speedDown
+    }
+    //public static List<Player> Players = new List<Player>();
+    public static Stack<Player> Playerss = new Stack<Player>();
     string name;
-    Dictionary<byte,KeyCode> control = new Dictionary<byte,KeyCode>(4);
+    Dictionary<comand,KeyCode> control = new Dictionary<comand,KeyCode>();
     public static int GetCount
     {
         get{
-            return Players.Count;
+            return (Playerss != null) ? Playerss.Count : 0;
         }
     }
-    public static void DeletePlayer(string name)
-    {
-        if (Player.GetCount == 0)
-            return;
-        Player tmp = null;
-        foreach(var item in Players)
-            if(item.GetName == name)
-                tmp = item;
-        if(tmp != null)
-            Players.Remove(tmp);
-    }
-    public static Player GetPlayer()
+    /* public static Player GetPlayer()
     {        
         if (Players == null || GetCount == 0)
             return null;
@@ -40,20 +34,25 @@ public class Player : MonoBehaviour
             Players = tmpPlayers;
         }
         return tmp;
+    }*/
+    public static Player GetPlayerr()
+    {
+        return Playerss.Pop();
     }
 
     public static void ClearList()
     {
-        if(Players == null)
-            Players = new List<Player>();
+        if(Playerss == null)
+            Playerss = new Stack<Player>();
         else
-            Players.Clear();
+            Playerss.Clear();
     }
-    public Player(string name, Dictionary<byte,KeyCode> control)
+    public void AddPlayer(string name, Dictionary<comand,KeyCode> control)
     {
         this.name = name;
         this.control = control;
-        Players.Add(this);
+        //Players.Add(this);
+        Playerss.Push(new Player{name = name, control = control});
     }
     public string GetName
     {
@@ -61,7 +60,7 @@ public class Player : MonoBehaviour
             return name;
         }
     }
-    public Dictionary<byte,KeyCode> GetControl
+    public Dictionary<comand,KeyCode> GetControl
     {
         get{
             return control;
