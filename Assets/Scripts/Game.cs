@@ -18,6 +18,7 @@ public class Game : MonoBehaviour
     #endregion
     
     #region //variable
+
     public int[] scoreRow = {10, 30, 80, 200};  
     public string prefab = "Prefabs/";
     public string[] prefabsName = {
@@ -28,7 +29,7 @@ public class Game : MonoBehaviour
             "Tetromino_S",
             "Tetromino_T",
             "Tetromino_Z"};
-    public int completedRowsForUpdateSpeed = 15;
+    public int completedRowsForUpdateDifficulty = 15;
     public int maxLevelDifficulty = 5;    
     bool isDone = false;
     public Transform[,] grid = new Transform[GridWeight, GridHeight];
@@ -39,8 +40,6 @@ public class Game : MonoBehaviour
     int countSpeedAtRows = 0;
 
     bool isStart = true;
-
-    
 
     TetroMino previewTetromino;
     TetroMino nextTetromino;
@@ -56,8 +55,7 @@ public class Game : MonoBehaviour
     public Transform previewTetrominoTransform;
 
     #endregion
-
-
+    
     void Start()
     {      
         isDone = false;
@@ -66,11 +64,33 @@ public class Game : MonoBehaviour
         countRows = 0;
         speedDifficulty = 1;
         countSpeedAtRows = 0;
-    }    
+    }
+    public void GoStart(Player player)
+    {
+        this.player = player;
+        SpawnNextTetromino();
+        previewTetromino = null;
+    }
+
+    void Update()
+    {
+        UpdateScore();
+        UpdateUI();
+        UpdateDifficultySpeed();
+    }
+
+    #region // работа с UI и расчет скорости строк и сложности
+
+    void UpdateUI()
+    {
+        hub_Score.text = "Score: \n" + currentScore; ;
+        hub_Difficulty.text = "Difficulty: \n" + speedDifficulty.ToString(); ;
+        hub_CompletedRows.text = "Completed Rows:\n" + countRows.ToString(); ;
+    }
 
     void UpdateDifficultySpeed()
     {
-        if ((countRows - countSpeedAtRows >= completedRowsForUpdateSpeed || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < maxLevelDifficulty)
+        if ((countRows - countSpeedAtRows >= completedRowsForUpdateDifficulty || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < maxLevelDifficulty)
         {
             speedDifficulty++;
             countSpeedAtRows = countRows;            
@@ -83,12 +103,6 @@ public class Game : MonoBehaviour
         nextTetromino.fallspeed = 1.1f - (0.15f * speedDifficulty);
     }
 
-    public void GoStart(Player player)
-    {
-        this.player = player;
-        SpawnNextTetromino();   
-    }
-        
     void UpdateScore()
     {
         if (numberOfRowsThisTurn>0 && numberOfRowsThisTurn<=4)
@@ -99,50 +113,65 @@ public class Game : MonoBehaviour
         numberOfRowsThisTurn = 0;
     }
 
+    #endregion
+
+    #region //создание новой Тетромино
+
     public void SpawnNextTetromino()        //спавн Tetromino написано по видеоуроку, превью сделано по аналогии 
     {
-        if (isStart)
+        if (previewTetromino == null)
         {
-            GameObject next = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), transform); 
-            changeGridPosition = new Vector2(transform.position.x - 4, transform.position.y - 20);      
-            nextTetromino = next.GetComponent<TetroMino>();
-            nextTetromino.SetGame = this;
-
-            GameObject preview = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), previewTetrominoTransform); 
-            previewTetromino = preview.GetComponent<TetroMino>();     
-            previewTetromino.enabled = false;  
-
-            isStart = false;
+            GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), transform);
+            changeGridPosition = new Vector2(4 /*+ transform.localPosition.x*/ ,20 /*+ transform.localPosition.y*/);      
+            nextTetromino = next.GetComponent<TetroMino>();            
         }
         else
         {
-            nextTetromino = previewTetromino; 
-            nextTetromino.SetGame = this;
+            nextTetromino = previewTetromino;             
             nextTetromino.enabled = true;
             nextTetromino.transform.parent = transform;
-            nextTetromino.transform.position = transform.position;
+        }
+        nextTetromino.SetGame = this;
 
-            GameObject preview = (GameObject)GameObject.Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), previewTetrominoTransform); 
-            previewTetromino = preview.GetComponent<TetroMino>();     
-            previewTetromino.enabled = false;  
+        GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), previewTetrominoTransform);
+        previewTetromino = preview.GetComponent<TetroMino>();
+        previewTetromino.enabled = false;
+    }
+
+    string GetRandomTetromino()     //рандомный выбор tetromino для спавна 
+    {
+        int randomTetromino = Random.Range(0, 7);
+        return prefab + prefabsName[randomTetromino];
+    }
+
+    #endregion
+
+    public void UpdateGrid(TetroMino tetroMino)         //запись в Grid новых Tetromino
+    {
+        for (int y = 0; y < GridHeight; y++)
+            for (int x = 0; x < GridWeight; x++)
+                if (grid[x, y] != null && grid[x, y].parent == tetroMino.transform/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/)
+                    grid[x, y] = null;
+
+        foreach (Transform mino in tetroMino.transform)
+        {
+            Point pos = ReverseVector(mino.localPosition);
+            if (pos.j < GridHeight)
+                grid[(int)pos.i, (int)pos.j] = mino;
         }
     }
-    
 
-    #region с видеоуроков
+    #region //проверка строк и удаление заполненых строк со смещением вниз
 
-    void Update()
+    public void DeleteRow()
     {
-        UpdateScore();
-        UpdateUI();
-        UpdateDifficultySpeed();
-    }
-
-    void UpdateUI()
-    {
-        hub_Score.text = "Score: \n" + currentScore;;
-        hub_Difficulty.text = "Difficulty: \n" + speedDifficulty.ToString();;
-        hub_CompletedRows.text = "Completed Rows:\n" + countRows.ToString();;
+        for (int y = 0; y < GridHeight; y++)
+            if (IsFullRowAt(y))
+            {
+                DeleteMinoAt(y);
+                MoveAllRowDown(y + 1);
+                --y;
+            }
     }
 
     bool IsFullRowAt(int y)     //проверяем заполнена ли строка "у" в grid
@@ -163,51 +192,29 @@ public class Game : MonoBehaviour
         }        
     }
 
-    void MoveRowDown(int y)     // отпустить строку на 1 позицию
-    {
-        for (int x = 0; x < GridWeight; x++)
-            if (grid[x,y] != null)
-            {
-                grid[x, y - 1] = grid[x, y];
-                grid[x, y] = null;
-                grid[x, y - 1].position += Vector3.down;
-            }        
-    }
-
     void MoveAllRowDown(int y)  // отпустить все строки с позиции "у"
     {
         for (int i = y; i < GridHeight; i++)        
             MoveRowDown(i);        
     }
 
-    public void DeleteRow()
+    void MoveRowDown(int y)     // отпустить строку на 1 позицию
     {
-        for (int y = 0; y < GridHeight; y++)        
-            if (IsFullRowAt(y))
+        for (int x = 0; x < GridWeight; x++)
+            if (grid[x, y] != null)
             {
-                DeleteMinoAt(y);
-                MoveAllRowDown(y + 1);
-                --y;
-            }        
+                grid[x, y - 1] = grid[x, y];
+                grid[x, y] = null;
+                grid[x, y - 1].localPosition += Vector3.down;
+            }
     }
 
-    public void UpdateGrid(TetroMino tetroMino)         //запись в Grid новых Tetromino
-    {
-        for (int y = 0; y < GridHeight; y++)        
-            for (int x = 0; x < GridWeight; x++)            
-                if (grid[x, y] != null)
-                    if (grid[x, y].parent == tetroMino.transform)
-                        grid[x, y] = null;
-                    
-        foreach (Transform mino in tetroMino.transform)
-        {
-            Point pos = ReverseVector(mino.position);
-            if (pos.j < GridHeight)
-                grid[(int)pos.i, (int) pos.j] = mino;
-        }
-    }
+    #endregion
 
-    public Transform GetTransformAtGridPosition(Point pos)  // возвращает значение из grid по значению Vector2
+
+
+
+    public Transform GetTransformAtGridPosition(Point pos)  // возвращает значение из grid по значению Point
     {
         if (pos.j > GridHeight - 1)
             return null;
@@ -223,26 +230,23 @@ public class Game : MonoBehaviour
 
     public Point ReverseVector(Vector2 position)      //
     {
-        return new Point{ i =  Mathf.Round(position.x - changeGridPosition.x), j =  Mathf.Round(position.y - changeGridPosition.y)};
+        return new Point{ i =  Mathf.Round(position.x + changeGridPosition.x), j =  Mathf.Round(position.y + changeGridPosition.y)};
     }
 
-    string GetRandomTetromino()     //рандомный выбор tetromino для спавна 
-    {
-        int randomTetromino = Random.Range(0, 7);
-        return prefab + prefabsName[randomTetromino];
-    }
+    
 
-    public bool CheckIsAboveGrid(TetroMino tetromino)
+    public bool CheckIsAboveGrid(TetroMino tetromino) //Проверка на превышение верхней границы грид
     {
             foreach (Transform mino in tetromino.transform)
             {
-                Point pos = ReverseVector(mino.position);
+                Point pos = ReverseVector(mino.localPosition);
                 if (pos.j > GridHeight - 1)
                     return true;
             }
-        
         return false;
     }
+
+    #region // завершение игровой сессии
 
     public bool IsDone
     {
@@ -265,6 +269,9 @@ public class Game : MonoBehaviour
     }
 
     #endregion
+
+
+    
 
 
 }
