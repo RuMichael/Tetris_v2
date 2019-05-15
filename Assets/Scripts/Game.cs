@@ -70,9 +70,9 @@ public class Game : MonoBehaviour
         for (int y = 0; y < GridHeight; y++)
             for (int x = 0; x < GridWeight; x++)
                 grid[x, y] = null;
-        this.player = player;
-        SpawnNextTetromino();
+        this.player = player;        
         previewTetromino = null;
+        SpawnNextTetromino();
     }
 
     void Update()
@@ -126,15 +126,14 @@ public class Game : MonoBehaviour
         {
             GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), transform);
             changeGridPosition = new Vector3(4 /*+ transform.localPosition.x*/ ,20 /*+ transform.localPosition.y*/, 0);      
-            nextTetromino = next.GetComponent<TetroMino>();
-            nextTetromino.transform.parent = transform;
-            //nextTetromino.transform.localPosition += new Vector3(10, 0, 0);
+            nextTetromino = next.GetComponent<TetroMino>();         
         }
         else
         {
             nextTetromino = previewTetromino;             
             nextTetromino.enabled = true;
             nextTetromino.transform.parent = transform;
+            nextTetromino.transform.localPosition = Vector3.zero;
         }
         nextTetromino.SetGame = this;
 
@@ -164,9 +163,11 @@ public class Game : MonoBehaviour
 
         foreach (Transform mino in tetroMino.transform)
         {
-            Point pos = ReverseVector(tetroMino.transform.localPosition + mino.localPosition);
+            Point pos = ReverseVector(TetroMino.positionDeterminationMino(mino));
             if (pos.j < GridHeight)
+            {                
                 grid[(int)pos.i, (int)pos.j] = mino;
+            }
         }
     }
 
@@ -232,8 +233,8 @@ public class Game : MonoBehaviour
     {
         if (pos.j > GridHeight - 1)
             return null;
-        
-            return grid[(int) pos.i, (int) pos.j];
+        //grid[(int) pos.i, (int) pos.j].localPosition = new Vector3(pos.i,pos.j,0);
+        return grid[(int) pos.i, (int) pos.j];
     }
 
     /// <summary>
@@ -265,7 +266,7 @@ public class Game : MonoBehaviour
     {
             foreach (Transform mino in tetromino.transform)
             {
-                Point pos = ReverseVector(tetromino.transform.localPosition + mino.localPosition);
+                Point pos = ReverseVector(TetroMino.positionDeterminationMino(mino));
                 if (pos.j > GridHeight - 1)
                     return true;
             }
