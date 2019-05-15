@@ -10,7 +10,7 @@ public class TetroMino : MonoBehaviour
     Game game;      
     Dictionary<Player.comand,KeyCode> control;
 
-    public Vector2 changeGridPosition;
+    //public Vector3 changeGridPosition;
 
     public Game SetGame
     {
@@ -59,7 +59,8 @@ public class TetroMino : MonoBehaviour
     void Move(Vector3 move)     //движение влево вправо вниз
     {
         transform.localPosition += move;
-        fall = Time.time;
+        if (move == Vector3.down)
+            fall = Time.time;
         if (!CheckIsVallidPosition())
         {
             transform.localPosition -= move;
@@ -82,9 +83,8 @@ public class TetroMino : MonoBehaviour
         foreach (Transform mino in transform)
         {
             Game.Point pos = game.ReverseVector(transform.localPosition + mino.localPosition);
-            if (!game.CheckIsInsideGrid(pos))
-                return false;
-            if (game.GetTransformAtGridPosition(pos) != null && game.GetTransformAtGridPosition(pos).parent != transform)
+            Transform transformAtGridPosition = game.GetTransformAtGridPosition(pos);
+            if (!game.CheckIsInsideGrid(pos) || (transformAtGridPosition != null && transformAtGridPosition.parent != transform))
                 return false;
         }
         return true;
@@ -96,9 +96,8 @@ public class TetroMino : MonoBehaviour
         {
             minoError = mino;
             Game.Point pos = game.ReverseVector(transform.localPosition + mino.localPosition);
-            if (!game.CheckIsInsideGrid(pos))
-                return false;
-            if (game.GetTransformAtGridPosition(pos) != null && game.GetTransformAtGridPosition(pos).parent != transform)
+            Transform transformAtGridPosition = game.GetTransformAtGridPosition(pos);
+            if (!game.CheckIsInsideGrid(pos) || (transformAtGridPosition != null && transformAtGridPosition.parent != transform))
                 return false;
         }
         minoError = null;
@@ -109,28 +108,27 @@ public class TetroMino : MonoBehaviour
     {
         Transform minoError;
 
-        float centerPositionX = CheckCenterX();
-        float tmpCenterPositionX;
+        float beforeCenterPositionX = CheckCenterX();
+        float afterCenterPositionX;
 
-        float minPositionY = CheckMinY();
-        float tmpMinPositionY;
+        float beforeMinPositionY = CheckMinY();
+        float afterMinPositionY;
         if (LimitRotation && transform.rotation.eulerAngles.z >= 90)
             transform.Rotate(0, 0, -90);
         else
             transform.Rotate(0, 0, 90);
 
-        tmpMinPositionY = CheckMinY();
-        transform.localPosition += new Vector3(0, minPositionY - tmpMinPositionY, 0); //смещаем положение тетромино до минимального значения по у(чтобы поворот не влиял на положение тетрамино по "у")
-
-        tmpCenterPositionX = CheckCenterX(); 
-        transform.localPosition += new Vector3(centerPositionX - tmpCenterPositionX, 0, 0); // смещаем положение по х, но ориентируемся на центр тетромино
+        afterCenterPositionX = CheckCenterX();
+        transform.localPosition += new Vector3(beforeCenterPositionX - afterCenterPositionX, 0, 0); // смещаем положение по х, но ориентируемся на центр тетромино
+        afterMinPositionY = CheckMinY();
+        transform.localPosition += new Vector3(0, beforeMinPositionY - afterMinPositionY, 0); //смещаем положение тетромино до минимального значения по у(чтобы поворот не влиял на положение тетрамино по "у")
 
         if (!CheckIsVallidPosition(out minoError))
         {            
             if (!PositionOffset(game.ReverseVector(transform.localPosition + minoError.localPosition).i))
             {
-                transform.localPosition -= new Vector3(centerPositionX - tmpCenterPositionX, 0, 0);
-                transform.localPosition -= new Vector3(0, minPositionY - tmpMinPositionY, 0);
+                transform.localPosition -= new Vector3(beforeCenterPositionX - afterCenterPositionX, 0, 0);
+                transform.localPosition -= new Vector3(0, beforeMinPositionY - afterMinPositionY, 0);
                 if (LimitRotation && !(transform.rotation.eulerAngles.z >= 90))
                 {
                     transform.Rotate(0, 0, 90);
@@ -176,10 +174,9 @@ public class TetroMino : MonoBehaviour
             if (minoP.j < minPosY)
                 minPosY = minoP.j;
         }
-
         return minPosY;
     } 
-    int CheckCenterX()    //найти центральное(округленное до целого) значение позиции тетромино по "х"
+    float CheckCenterX()    //найти центральное(округленное до целого) значение позиции тетромино по "х"
     {
         float result = 0;
         foreach (Transform mino in transform)
@@ -187,7 +184,7 @@ public class TetroMino : MonoBehaviour
             Game.Point minoP = game.ReverseVector(transform.localPosition + mino.localPosition);
             result += minoP.i;
         }
-        return (int)Mathf.Round(result / 4f);
+        return Mathf.Round(result / 4f);
     }
     float CheckMinX()       //найти минимальное значение позиции тетромино по "х"
     {
@@ -196,7 +193,7 @@ public class TetroMino : MonoBehaviour
         {
             Game.Point minoP = game.ReverseVector(transform.localPosition + mino.localPosition);
             if (minoP.i < minPosX)
-                minPosX = mino.localPosition.x;
+                minPosX = minoP.i;
         }
         return minPosX;
     }

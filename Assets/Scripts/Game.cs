@@ -12,12 +12,12 @@ public class Game : MonoBehaviour
         public float j;
     }
 
-    #region //const
+    #region #const
     public const int GridHeight = 20;
     public const int GridWeight = 10;
     #endregion
-    
-    #region //variable
+
+    #region #variable
 
     public int[] scoreRow = {10, 30, 80, 200};  
     public string prefab = "Prefabs/";
@@ -46,7 +46,7 @@ public class Game : MonoBehaviour
 
     public Player player;
     
-    public Vector2 changeGridPosition;
+    public Vector3 changeGridPosition;
 
     public Text hub_Score;
     public Text hub_Difficulty;
@@ -67,6 +67,9 @@ public class Game : MonoBehaviour
     }
     public void GoStart(Player player)
     {
+        for (int y = 0; y < GridHeight; y++)
+            for (int x = 0; x < GridWeight; x++)
+                grid[x, y] = null;
         this.player = player;
         SpawnNextTetromino();
         previewTetromino = null;
@@ -79,7 +82,7 @@ public class Game : MonoBehaviour
         UpdateDifficultySpeed();
     }
 
-    #region // работа с UI и расчет скорости строк и сложности
+    #region #работа с UI и расчет скорости строк и сложности
 
     void UpdateUI()
     {
@@ -115,15 +118,17 @@ public class Game : MonoBehaviour
 
     #endregion
 
-    #region //создание новой Тетромино
+    #region #создание новой Тетромино
 
     public void SpawnNextTetromino()        //спавн Tetromino написано по видеоуроку, превью сделано по аналогии 
     {
         if (previewTetromino == null)
         {
             GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), transform);
-            changeGridPosition = new Vector2(4 /*+ transform.localPosition.x*/ ,20 /*+ transform.localPosition.y*/);      
-            nextTetromino = next.GetComponent<TetroMino>();            
+            changeGridPosition = new Vector3(4 /*+ transform.localPosition.x*/ ,20 /*+ transform.localPosition.y*/, 0);      
+            nextTetromino = next.GetComponent<TetroMino>();
+            nextTetromino.transform.parent = transform;
+            //nextTetromino.transform.localPosition += new Vector3(10, 0, 0);
         }
         else
         {
@@ -146,7 +151,11 @@ public class Game : MonoBehaviour
 
     #endregion
 
-    public void UpdateGrid(TetroMino tetroMino)         //запись в Grid новых Tetromino
+    /// <summary>
+    /// запись в Grid новых Tetromino
+    /// </summary>
+    /// <param name="tetroMino"></param>
+    public void UpdateGrid(TetroMino tetroMino)         
     {
         for (int y = 0; y < GridHeight; y++)
             for (int x = 0; x < GridWeight; x++)
@@ -155,14 +164,17 @@ public class Game : MonoBehaviour
 
         foreach (Transform mino in tetroMino.transform)
         {
-            Point pos = ReverseVector(mino.localPosition);
+            Point pos = ReverseVector(tetroMino.transform.localPosition + mino.localPosition);
             if (pos.j < GridHeight)
                 grid[(int)pos.i, (int)pos.j] = mino;
         }
     }
 
-    #region //проверка строк и удаление заполненых строк со смещением вниз
+    #region #проверка строк и удаление заполненых строк со смещением вниз
 
+    /// <summary>
+    /// удаление заполненых строк со смещением вниз
+    /// </summary>
     public void DeleteRow()
     {
         for (int y = 0; y < GridHeight; y++)
@@ -211,42 +223,56 @@ public class Game : MonoBehaviour
 
     #endregion
 
-
-
-
+    /// <summary>
+    /// возвращает значение из grid по значению Point
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
     public Transform GetTransformAtGridPosition(Point pos)  // возвращает значение из grid по значению Point
     {
         if (pos.j > GridHeight - 1)
             return null;
-        else
+        
             return grid[(int) pos.i, (int) pos.j];
     }
 
-    
-    public bool CheckIsInsideGrid(Point position)     //проверка на превышение границ Grid
+    /// <summary>
+    /// проверка на превышение границ Grid
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public bool CheckIsInsideGrid(Point position)     
     {
         return (position.i >= 0 && position.j >= 0 && position.i < GridWeight);
     }
 
-    public Point ReverseVector(Vector2 position)      //
+    /// <summary>
+    /// конвертируем позицию Transform в позицию для массива Grid
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public Point ReverseVector(Vector3 position)      
     {
-        return new Point{ i =  Mathf.Round(position.x + changeGridPosition.x), j =  Mathf.Round(position.y + changeGridPosition.y)};
+        return new Point{ i =  (int)Mathf.Round(position.x + changeGridPosition.x), j =  (int)Mathf.Round(position.y + changeGridPosition.y)};
     }
 
-    
-
-    public bool CheckIsAboveGrid(TetroMino tetromino) //Проверка на превышение верхней границы грид
+    /// <summary>
+    /// Проверка на превышение верхней границы грид
+    /// </summary>
+    /// <param name="tetromino"></param>
+    /// <returns></returns>
+    public bool CheckIsAboveGrid(TetroMino tetromino) 
     {
             foreach (Transform mino in tetromino.transform)
             {
-                Point pos = ReverseVector(mino.localPosition);
+                Point pos = ReverseVector(tetromino.transform.localPosition + mino.localPosition);
                 if (pos.j > GridHeight - 1)
                     return true;
             }
         return false;
     }
 
-    #region // завершение игровой сессии
+    #region #завершение игровой сессии
 
     public bool IsDone
     {
@@ -269,9 +295,5 @@ public class Game : MonoBehaviour
     }
 
     #endregion
-
-
-    
-
 
 }
