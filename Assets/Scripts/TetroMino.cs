@@ -170,24 +170,16 @@ public class TetroMino : MonoBehaviour
     }     
     void RotateUp()
     {
-        float x,y;
-        foreach (Transform mino in transform)        
-        {
-            x = mino.localPosition.x;
-            y = mino.localPosition.y;
-            mino.localPosition = new Vector3(y * (-1), x, 0);
-        }
+        foreach (Transform mino in transform) 
+            mino.localPosition = new Vector3(mino.localPosition.y * (-1), mino.localPosition.x, 0);
+        
 
     }
     void RotateDown()
     {
-        float x,y;
-        foreach (Transform mino in transform)        
-        {
-            x = mino.localPosition.x;
-            y = mino.localPosition.y;
-            mino.localPosition = new Vector3(y, x * (-1), 0);
-        }
+        foreach (Transform mino in transform)     
+            mino.localPosition = new Vector3(mino.localPosition.y, mino.localPosition.x * (-1), 0);
+        
     }
 
     float CheckMinPosY()
@@ -199,7 +191,7 @@ public class TetroMino : MonoBehaviour
                 result = mino.localPosition.y;
 
         }
-        return transform.localPosition.y + result;
+        return result;
     }
 
 }
