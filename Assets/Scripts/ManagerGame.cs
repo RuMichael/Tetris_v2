@@ -6,11 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class ManagerGame : MonoBehaviour
 {
+    public static ManagerGame singlton{get;set;}
     List<Game> games = new List<Game>();
     public Transform startPosition;
 
     void Start()
     {
+        if (singlton != null)
+            Destroy(singlton.gameObject);
+        singlton = this;
         int c = 0;
         GameObject instGrid;
         Game game;
@@ -25,22 +29,23 @@ public class ManagerGame : MonoBehaviour
             c++;
         }
     }
-    void Update()
+    public void CheckGameOver()
     {
-        GameOver();
+        bool check = true;
+        foreach (Game game in games)        
+            if (!game.IsDone)
+                check = false;
+        
+        if (check)
+        {
+            UpdatePlayers();
+            SceneManager.LoadScene("GameOver");
+        }
     }
 
-    void GameOver()
+    void UpdatePlayers()
     {
-        /*if(game2 == null)
-        {
-            if (game1.IsDone)
-                SceneManager.LoadScene("GameOver");
-        }
-        else
-            if(game1.IsDone && game2.IsDone)
-                SceneManager.LoadScene("GameOver");*/
-
-
+        foreach (Game game in games)
+            Player.AddPlayer(game.player);
     }
 }

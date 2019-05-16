@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player /*: MonoBehaviour*/
 {
     public enum comand
     {
-        left,right,turn,down,speedUp,speedDown
+        left, right, turn, down, speedUp, speedDown, leftOther, rightOther, turnOther, downOther,  speedUpOther, speedDownOther
     }
+
+    #region #static
+
+    
     public static Stack<Player> Playerss = new Stack<Player>();
-    string name;
-    Dictionary<comand,KeyCode> control = new Dictionary<comand,KeyCode>();
     public static int GetCount
     {
         get{
@@ -21,30 +23,72 @@ public class Player : MonoBehaviour
     {
         return Playerss.Pop();
     }
-
     public static void ClearList()
     {
-        if(Playerss == null)
+        if (Playerss == null)
             Playerss = new Stack<Player>();
         else
             Playerss.Clear();
     }
-    public void AddPlayer(string name, Dictionary<comand,KeyCode> control)
+    public static void AddPlayer(string name, Dictionary<comand,KeyCode> control)
     {
-        this.name = name;
-        this.control = control;
-        Playerss.Push(new Player{name = name, control = control});
+        Playerss.Push(new Player{Name = name, control = control});
     }
-    public string GetName
+
+    public static void AddPlayer(Player player)
     {
-        get{
-            return name;
+        bool check = true;
+        foreach (Player item in Playerss)
+        {
+            if (item.GetName == player.GetName)
+            {    
+                check = false;
+                item.Score = player.Score;
+                item.Rows = player.Rows;
+                item.Difficulty = player.Difficulty;
+            }
         }
+        if (check)
+            Playerss.Push(player);
     }
+    #endregion
+
+    #region class player
+
+    string Name;
+    Dictionary<comand,KeyCode> control;
+    int score;
+    int rows;
+    int difficult;
+        
     public Dictionary<comand,KeyCode> GetControl
     {
         get{
             return control;
         }
+    }    
+    public string GetName
+    {
+        get{
+            return Name;
+        }
     }
+
+    public int Score
+    {
+        get{return score;}
+        set{score = value;}
+    }
+    public int Rows
+    {
+        get{return rows;}
+        set{rows = value;}
+    }
+    public int Difficulty
+    {
+        get{return difficult;}
+        set{difficult = value;}
+    }
+
+    #endregion
 }

@@ -39,8 +39,6 @@ public class Game : MonoBehaviour
     int speedDifficulty = 1;
     int countSpeedAtRows = 0;
 
-    bool isStart = true;
-
     TetroMino previewTetromino;
     TetroMino nextTetromino;
 
@@ -93,12 +91,13 @@ public class Game : MonoBehaviour
 
     void UpdateDifficultySpeed()
     {
-        if ((countRows - countSpeedAtRows >= completedRowsForUpdateDifficulty || Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.Plus) || Input.GetKeyDown(KeyCode.KeypadPlus)) && speedDifficulty < maxLevelDifficulty)
+        if ((countRows - countSpeedAtRows >= completedRowsForUpdateDifficulty || Input.GetKeyDown(player.GetControl[Player.comand.speedUp]) || Input.GetKeyDown(player.GetControl[Player.comand.speedUpOther])) 
+        && speedDifficulty < maxLevelDifficulty)
         {
             speedDifficulty++;
             countSpeedAtRows = countRows;            
         }
-        else if ((Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus)) && speedDifficulty > 1)
+        else if ((Input.GetKeyDown(player.GetControl[Player.comand.speedDown]) || Input.GetKeyDown(player.GetControl[Player.comand.speedDownOther])) && speedDifficulty > 1)
         {
             speedDifficulty--;
             countSpeedAtRows = countRows;            
@@ -125,7 +124,7 @@ public class Game : MonoBehaviour
         if (previewTetromino == null)
         {
             GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), transform);
-            changeGridPosition = new Vector3(4 /*+ transform.localPosition.x*/ ,20 /*+ transform.localPosition.y*/, 0);      
+            changeGridPosition = new Vector3(4, 20, 0);      
             nextTetromino = next.GetComponent<TetroMino>();         
         }
         else
@@ -158,7 +157,7 @@ public class Game : MonoBehaviour
     {
         for (int y = 0; y < GridHeight; y++)
             for (int x = 0; x < GridWeight; x++)
-                if (grid[x, y] != null && grid[x, y].parent == tetroMino.transform/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/)
+                if (grid[x, y] != null && grid[x, y].parent == tetroMino.transform)
                     grid[x, y] = null;
 
         foreach (Transform mino in tetroMino.transform)
@@ -233,7 +232,6 @@ public class Game : MonoBehaviour
     {
         if (pos.j > GridHeight - 1)
             return null;
-        //grid[(int) pos.i, (int) pos.j].localPosition = new Vector3(pos.i,pos.j,0);
         return grid[(int) pos.i, (int) pos.j];
     }
 
@@ -254,7 +252,7 @@ public class Game : MonoBehaviour
     /// <returns></returns>
     public Point ReverseVector(Vector3 position)      
     {
-        return new Point{ i =  (int)Mathf.Round(position.x + changeGridPosition.x), j =  (int)Mathf.Round(position.y + changeGridPosition.y)};
+        return new Point{i = (int)Mathf.Round(position.x + changeGridPosition.x), j =  (int)Mathf.Round(position.y + changeGridPosition.y)};
     }
 
     /// <summary>
@@ -290,9 +288,10 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    public void PlayerLost()
     {
         IsDone = true;
+        ManagerGame.singlton.CheckGameOver();
     }
 
     #endregion
