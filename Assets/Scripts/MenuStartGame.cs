@@ -7,15 +7,15 @@ using UnityEngine.UI;
 public class MenuStartGame : MonoBehaviour
 {
     public Text hud_Header;
-
     bool playSolo = true;
     void Start()
     {
-        hud_Header.text =" TETRIS ";
+        hud_Header.text =" TETRIS ";  
+        playSolo = true;      
     }
     public void PlayTogether()
     {
-        Player.AddPlayer("Player1", new Dictionary<Player.comand, KeyCode> {
+        Player player = new Player("Player2", new Dictionary<Player.comand, KeyCode> {
             {Player.comand.turn, KeyCode.KeypadEnter},
             {Player.comand.left, KeyCode.LeftArrow},
             {Player.comand.down, KeyCode.DownArrow},
@@ -30,13 +30,15 @@ public class MenuStartGame : MonoBehaviour
             {Player.comand.speedUpOther, KeyCode.None},
             {Player.comand.speedDownOther, KeyCode.None},
         });
+        GameMetaData.GetInstance().SetPlayer(player);
         playSolo = false;
         PlaySolo();
     }
     public void PlaySolo()
     {
         if (playSolo)
-            Player.AddPlayer("Player2", new Dictionary<Player.comand, KeyCode> {
+        {
+            Player player = new Player("Player1", new Dictionary<Player.comand, KeyCode> {
                 {Player.comand.turn, KeyCode.Space},
                 {Player.comand.left, KeyCode.A},
                 {Player.comand.down, KeyCode.S},
@@ -50,8 +52,11 @@ public class MenuStartGame : MonoBehaviour
                 {Player.comand.speedUpOther, KeyCode.KeypadPlus},
                 {Player.comand.speedDownOther, KeyCode.KeypadMinus},
             });
+            GameMetaData.GetInstance().SetPlayer(player);
+        }
         else
-            Player.AddPlayer("Player2", new Dictionary<Player.comand, KeyCode> {
+        {
+            Player player = new Player("Player1", new Dictionary<Player.comand, KeyCode> {
                 {Player.comand.turn, KeyCode.Space},
                 {Player.comand.left, KeyCode.A},
                 {Player.comand.down, KeyCode.S},
@@ -66,6 +71,8 @@ public class MenuStartGame : MonoBehaviour
                 {Player.comand.speedUpOther, KeyCode.None},
                 {Player.comand.speedDownOther, KeyCode.None},
             });
+            GameMetaData.GetInstance().SetPlayer(player);
+        }
         
         SceneManager.LoadScene("Level");
     }

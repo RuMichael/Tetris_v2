@@ -262,12 +262,12 @@ public class Game : MonoBehaviour
     /// <returns></returns>
     public bool CheckIsAboveGrid(TetroMino tetromino) 
     {
-            foreach (Transform mino in tetromino.transform)
-            {
-                Point pos = ReverseVector(TetroMino.positionDeterminationMino(mino));
-                if (pos.j > GridHeight - 1)
-                    return true;
-            }
+        foreach (Transform mino in tetromino.transform)
+        {
+            Point pos = ReverseVector(TetroMino.positionDeterminationMino(mino));
+            if (pos.j > GridHeight - 1)
+                return true;
+        }
         return false;
     }
 
@@ -292,6 +292,10 @@ public class Game : MonoBehaviour
     {
         IsDone = true;
         ManagerGame.singlton.CheckGameOver();
+        player.Difficulty = speedDifficulty;
+        player.Rows = countRows;
+        player.Score = currentScore;
+        GameMetaData.GetInstance().SetPlayer(player);
     }
 
     #endregion

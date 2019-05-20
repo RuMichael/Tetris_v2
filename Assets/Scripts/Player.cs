@@ -9,51 +9,11 @@ public class Player
         left, right, turn, down, speedUp, speedDown, leftOther, rightOther, turnOther, downOther,  speedUpOther, speedDownOther
     }
 
-    #region #static
-
-    
-    public static Stack<Player> Playerss = new Stack<Player>();
-    public static int GetCount
+    public Player(string name, Dictionary<comand,KeyCode> control)
     {
-        get{
-            return (Playerss != null) ? Playerss.Count : 0;
-        }
+        this.Name = name;
+        this.control = control;
     }
-    public static Player GetPlayerr()
-    {
-        return Playerss.Pop();
-    }
-    public static void ClearList()
-    {
-        if (Playerss == null)
-            Playerss = new Stack<Player>();
-        else
-            Playerss.Clear();
-    }
-    public static void AddPlayer(string name, Dictionary<comand,KeyCode> control)
-    {
-        Playerss.Push(new Player{Name = name, control = control});
-    }
-
-    public static void AddPlayer(Player player)
-    {
-        bool check = true;
-        foreach (Player item in Playerss)
-        {
-            if (item.GetName == player.GetName)
-            {    
-                check = false;
-                item.Score = player.Score;
-                item.Rows = player.Rows;
-                item.Difficulty = player.Difficulty;
-            }
-        }
-        if (check)
-            Playerss.Push(player);
-    }
-    #endregion
-
-    #region class player
 
     string Name;
     Dictionary<comand,KeyCode> control;
@@ -90,5 +50,4 @@ public class Player
         set{difficult = value;}
     }
 
-    #endregion
 }

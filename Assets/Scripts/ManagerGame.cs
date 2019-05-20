@@ -18,7 +18,7 @@ public class ManagerGame : MonoBehaviour
         int c = 0;
         GameObject instGrid;
         Game game;
-        foreach (Player item in Player.Playerss)
+        foreach (Player item in GameMetaData.GetInstance().GetPlayers)
         {
             instGrid = (GameObject)Instantiate(Resources.Load("Prefabs/Grid", typeof(GameObject)));
             float biasPrefab = instGrid.GetComponent<RectTransform>().rect.width;
@@ -38,14 +38,7 @@ public class ManagerGame : MonoBehaviour
         
         if (check)
         {
-            UpdatePlayers();
             SceneManager.LoadScene("GameOver");
         }
-    }
-
-    void UpdatePlayers()
-    {
-        foreach (Game game in games)
-            Player.AddPlayer(game.player);
     }
 }
