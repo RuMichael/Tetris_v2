@@ -15,21 +15,22 @@ public class MenuStartGame : MonoBehaviour
     }
     public void PlayTogether()
     {
-        Player player = new Player("Player2", new Dictionary<Player.comand, KeyCode> {
-            {Player.comand.turn, KeyCode.KeypadEnter},
-            {Player.comand.left, KeyCode.LeftArrow},
-            {Player.comand.down, KeyCode.DownArrow},
-            {Player.comand.right, KeyCode.RightArrow},
-            {Player.comand.speedUp, KeyCode.KeypadPlus},
-            {Player.comand.speedDown, KeyCode.KeypadMinus},
+        
+        Player player = new Player("Player1", new Dictionary<Player.comand, KeyCode> {
+                {Player.comand.turn, KeyCode.Space},
+                {Player.comand.left, KeyCode.A},
+                {Player.comand.down, KeyCode.S},
+                {Player.comand.right, KeyCode.D},
+                {Player.comand.speedUp, KeyCode.Equals},
+                {Player.comand.speedDown, KeyCode.Minus},
 
-            {Player.comand.turnOther, KeyCode.None},
-            {Player.comand.leftOther, KeyCode.None},
-            {Player.comand.downOther, KeyCode.None},
-            {Player.comand.rightOther, KeyCode.None},
-            {Player.comand.speedUpOther, KeyCode.None},
-            {Player.comand.speedDownOther, KeyCode.None},
-        });
+                {Player.comand.turnOther, KeyCode.None},
+                {Player.comand.leftOther, KeyCode.None},
+                {Player.comand.downOther, KeyCode.None},
+                {Player.comand.rightOther, KeyCode.None},
+                {Player.comand.speedUpOther, KeyCode.None},
+                {Player.comand.speedDownOther, KeyCode.None}
+            });
         GameMetaData.GetInstance().SetPlayer(player);
         playSolo = false;
         PlaySolo();
@@ -50,26 +51,26 @@ public class MenuStartGame : MonoBehaviour
                 {Player.comand.downOther, KeyCode.DownArrow},
                 {Player.comand.rightOther, KeyCode.RightArrow},
                 {Player.comand.speedUpOther, KeyCode.KeypadPlus},
-                {Player.comand.speedDownOther, KeyCode.KeypadMinus},
+                {Player.comand.speedDownOther, KeyCode.KeypadMinus}
             });
             GameMetaData.GetInstance().SetPlayer(player);
         }
         else
         {
-            Player player = new Player("Player1", new Dictionary<Player.comand, KeyCode> {
-                {Player.comand.turn, KeyCode.Space},
-                {Player.comand.left, KeyCode.A},
-                {Player.comand.down, KeyCode.S},
-                {Player.comand.right, KeyCode.D},
-                {Player.comand.speedUp, KeyCode.Equals},
-                {Player.comand.speedDown, KeyCode.Minus},
+            Player player = new Player("Player2", new Dictionary<Player.comand, KeyCode> {
+                {Player.comand.turn, KeyCode.KeypadEnter},
+                {Player.comand.left, KeyCode.LeftArrow},
+                {Player.comand.down, KeyCode.DownArrow},
+                {Player.comand.right, KeyCode.RightArrow},
+                {Player.comand.speedUp, KeyCode.KeypadPlus},
+                {Player.comand.speedDown, KeyCode.KeypadMinus},
 
                 {Player.comand.turnOther, KeyCode.None},
                 {Player.comand.leftOther, KeyCode.None},
                 {Player.comand.downOther, KeyCode.None},
                 {Player.comand.rightOther, KeyCode.None},
                 {Player.comand.speedUpOther, KeyCode.None},
-                {Player.comand.speedDownOther, KeyCode.None},
+                {Player.comand.speedDownOther, KeyCode.None}
             });
             GameMetaData.GetInstance().SetPlayer(player);
         }

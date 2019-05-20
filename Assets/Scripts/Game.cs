@@ -46,6 +46,8 @@ public class Game : MonoBehaviour
     
     public Vector3 changeGridPosition;
 
+
+    public Text hub_Name;
     public Text hub_Score;
     public Text hub_Difficulty;
     public Text hub_CompletedRows;
@@ -70,6 +72,7 @@ public class Game : MonoBehaviour
                 grid[x, y] = null;
         this.player = player;        
         previewTetromino = null;
+        hub_Name.text = player.GetName;
         SpawnNextTetromino();
     }
 

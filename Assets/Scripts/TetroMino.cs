@@ -172,8 +172,6 @@ public class TetroMino : MonoBehaviour
     {
         foreach (Transform mino in transform) 
             mino.localPosition = new Vector3(mino.localPosition.y * (-1), mino.localPosition.x, 0);
-        
-
     }
     void RotateDown()
     {
@@ -189,7 +187,6 @@ public class TetroMino : MonoBehaviour
         {
             if (mino.localPosition.y < result)
                 result = mino.localPosition.y;
-
         }
         return result;
     }

@@ -2377,8 +2377,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ab065610c13b0c4ab3969004ad35431, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  changeGridPosition: {x: 0, y: 0}
+  scoreRow: 0a0000001e00000050000000c8000000
+  prefab: Prefabs/
+  prefabsName:
+  - Tetromino_I
+  - Tetromino_J
+  - Tetromino_L
+  - Tetromino_O
+  - Tetromino_S
+  - Tetromino_T
+  - Tetromino_Z
+  completedRowsForUpdateDifficulty: 15
+  maxLevelDifficulty: 5
+  changeGridPosition: {x: 0, y: 0, z: 0}
+  hub_Name: {fileID: 3347037762189794418}
   hub_Score: {fileID: 1076324522403343408}
   hub_Difficulty: {fileID: 7848765967846298414}
   hub_CompletedRows: {fileID: 8230970481074790295}

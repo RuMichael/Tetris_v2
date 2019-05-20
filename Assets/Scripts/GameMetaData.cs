@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class GameMetaData 
 {
-
     private Dictionary<string, Player> m_Players;
-    private Stack<Player> stackPlayers;
     private static GameMetaData m_Instance;
     public GameMetaData()
     {
@@ -39,6 +37,11 @@ public class GameMetaData
                 players.Add(player);            
             return players;
         }
+    }
+
+    public void Clear()
+    {
+        m_Players.Clear();
     }
 
 }

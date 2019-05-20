@@ -835,6 +835,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stratPositionInfo: {fileID: 970900798}
+  winPositionPl1: {fileID: 1532243353}
+  winPositionPl2: {fileID: 794273365}
 --- !u!4 &2017543429
 Transform:
   m_ObjectHideFlags: 0
