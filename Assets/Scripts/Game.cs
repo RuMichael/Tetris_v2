@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {    
+
+    float timer;
     public struct Point
     {
         public float i;
@@ -20,15 +22,9 @@ public class Game : MonoBehaviour
     #region #variable
 
     public int[] scoreRow = {10, 30, 80, 200};  
-    public string prefab = "Prefabs/";
-    public string[] prefabsName = {
-            "Tetromino_I",
-            "Tetromino_J",
-            "Tetromino_L",
-            "Tetromino_O",
-            "Tetromino_S",
-            "Tetromino_T",
-            "Tetromino_Z"};
+
+    public GameObject[] prefabs;
+    
     public int completedRowsForUpdateDifficulty = 15;
     public int maxLevelDifficulty = 5;    
     bool isDone = false;
@@ -73,6 +69,7 @@ public class Game : MonoBehaviour
         this.player = player;        
         previewTetromino = null;
         hub_Name.text = player.GetName;
+        timer = Time.time;
         SpawnNextTetromino();
     }
 
@@ -122,11 +119,11 @@ public class Game : MonoBehaviour
 
     #region #создание новой Тетромино
 
-    public void SpawnNextTetromino()        //спавн Tetromino написано по видеоуроку, превью сделано по аналогии 
+    public void SpawnNextTetromino()        
     {
         if (previewTetromino == null)
         {
-            GameObject next = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), transform);
+            GameObject next = (GameObject)Instantiate(GetRandomTetromino(), transform);            
             changeGridPosition = new Vector3(4, 20, 0);      
             nextTetromino = next.GetComponent<TetroMino>();         
         }
@@ -139,15 +136,16 @@ public class Game : MonoBehaviour
         }
         nextTetromino.SetGame = this;
 
-        GameObject preview = (GameObject)Instantiate(Resources.Load(GetRandomTetromino(), typeof(GameObject)), previewTetrominoTransform);
+        GameObject preview = (GameObject)Instantiate(GetRandomTetromino(), previewTetrominoTransform);
         previewTetromino = preview.GetComponent<TetroMino>();
         previewTetromino.enabled = false;
     }
 
-    string GetRandomTetromino()     //рандомный выбор tetromino для спавна 
+    GameObject GetRandomTetromino()      
     {
-        int randomTetromino = Random.Range(0, 7);
-        return prefab + prefabsName[randomTetromino];
+        return prefabs[Random.Range(0, prefabs.Length)];
+        //int randomTetromino = Random.Range(0, prefabsName.Length);
+        //return prefab + prefabsName[randomTetromino];
     }
 
     #endregion
@@ -293,12 +291,13 @@ public class Game : MonoBehaviour
 
     public void PlayerLost()
     {
-        IsDone = true;
-        ManagerGame.singlton.CheckGameOver();
+        IsDone = true;        
         player.Difficulty = speedDifficulty;
         player.Rows = countRows;
         player.Score = currentScore;
+        player.Timer = Time.time - timer;
         GameMetaData.GetInstance().SetPlayer(player);
+        ManagerGame.singlton.CheckGameOver();
     }
 
     #endregion

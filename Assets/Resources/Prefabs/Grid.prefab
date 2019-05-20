@@ -104,7 +104,7 @@ RectTransform:
   m_GameObject: {fileID: 407195977333857135}
   m_LocalRotation: {x: 0, y: 0.002181689, z: 0, w: 0.9999976}
   m_LocalPosition: {x: 0, y: 0, z: -0.10902181}
-  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0}
   m_Children:
   - {fileID: 1249318905672002920}
   - {fileID: 6983699056923863542}
@@ -2378,15 +2378,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreRow: 0a0000001e00000050000000c8000000
-  prefab: Prefabs/
-  prefabsName:
-  - Tetromino_I
-  - Tetromino_J
-  - Tetromino_L
-  - Tetromino_O
-  - Tetromino_S
-  - Tetromino_T
-  - Tetromino_Z
+  prefabs:
+  - {fileID: 8397677001179997734, guid: 229f3ed4a6b245e418b0d41c17f6833a, type: 3}
+  - {fileID: 7733755222315749127, guid: 25cd49881277758459b263b05bf12943, type: 3}
+  - {fileID: 3151406326023005553, guid: 65dc45723b5a2fc4ea2eb4db7f5ddfa3, type: 3}
+  - {fileID: 6444110100855184155, guid: 853709a61e1310f499da6f25fff4272b, type: 3}
+  - {fileID: 3534503365170673069, guid: 2d590e9b8c313f242b55099f090598a7, type: 3}
+  - {fileID: 5075439645140703260, guid: ecfdc180c7bd1e949ac08c5961dc25bc, type: 3}
+  - {fileID: 6475040806727932981, guid: 15e49a960d1c25c4db5b23e305946595, type: 3}
   completedRowsForUpdateDifficulty: 15
   maxLevelDifficulty: 5
   changeGridPosition: {x: 0, y: 0, z: 0}

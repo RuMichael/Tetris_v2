@@ -20,6 +20,7 @@ public class Player
     int score;
     int rows;
     int difficult;
+    public float Timer{get;set;}
         
     public Dictionary<comand,KeyCode> GetControl
     {
