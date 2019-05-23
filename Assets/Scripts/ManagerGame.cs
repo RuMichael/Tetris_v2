@@ -19,15 +19,12 @@ public class ManagerGame : MonoBehaviour
             Destroy(singlton.gameObject);
         singlton = this;
 
-        Transform[] tmpPosition ;
+        
         List<Player> players = GameMetaData.GetInstance().GetPlayers;
-
-        if (players.Count == 1)        
-        {
-            tmpPosition = new Transform[1];
-            tmpPosition[0] = startPositionSolo;
-        }
-            
+        Transform[] tmpPosition = new Transform[players.Count];
+        
+        if (players.Count == 1)      
+            tmpPosition[0] = startPositionSolo;                    
         else if (players.Count == 2)
             tmpPosition = startPositionPlayer2;
         else 
