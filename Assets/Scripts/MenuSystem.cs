@@ -6,39 +6,36 @@ using UnityEngine.UI;
 
 public class MenuSystem : MonoBehaviour
 {
-    public Transform stratPositionInfo;
+    public RectTransform stratPositionInfo;
 
     
     void Start()
     {
+        List<Player> tmpPlayers = GameMetaData.GetInstance().GetPlayers;
         GameObject next;
-        Vector3 startPosition = new Vector3(-390, 0, 0);
         Player winner = null;
-        GameObject winnerr=null;
-        foreach (Player player in GameMetaData.GetInstance().GetPlayers)
-        {
+        PlayerInfo winnerInfo = null;
+        int count = 0 ;
+
+        Vector3 addPosition = new Vector3(stratPositionInfo.rect.width / (tmpPlayers.Count + 1), 0, 0);
+        Vector3 startPosition = new Vector3(addPosition.x - (stratPositionInfo.rect.width / 2), 0, 0);
+        foreach (Player player in tmpPlayers)
+        {            
             next = (GameObject)Instantiate(Resources.Load("Prefabs/PlayerInfo", typeof(GameObject)), stratPositionInfo);
             next.transform.localPosition = startPosition;
-            next.GetComponent<PlayerInfo>().ShowInfoPlayer(player.GetName);
-            startPosition += new Vector3(780,0,0);
+            startPosition += addPosition;
 
-            if (winner == null )
+            PlayerInfo tmpPlInf = next.GetComponent<PlayerInfo>();
+            tmpPlInf.ShowInfoPlayer(player, count);
+
+            if (winner == null || winner.Score < player.Score || winner.Timer < player.Timer)
             {
                 winner = player;
-                winnerr = next;
+                winnerInfo = tmpPlInf;
             }
-            else if (winner.Score < player.Score)
-            {
-                winner = player;
-                winnerr = next;
-            }
-            else if (winner.Timer<player.Timer)
-            {
-                winner = player;
-                winnerr = next;
-            }
+            count++;
         }
-        winnerr.GetComponent<PlayerInfo>().ShowWin();
+        winnerInfo.ShowWin();
 
     }
     public void PlayAgain()

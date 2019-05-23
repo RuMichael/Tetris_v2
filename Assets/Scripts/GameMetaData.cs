@@ -4,44 +4,40 @@ using UnityEngine;
 
 public class GameMetaData 
 {
-    private Dictionary<string, Player> m_Players;
     private static GameMetaData m_Instance;
-    public GameMetaData()
-    {
-        m_Players = new Dictionary<string, Player>();
-    }
     public static GameMetaData GetInstance()
     {
         if(m_Instance == null)
             m_Instance = new GameMetaData ();
         return m_Instance;
     }
-    public Player GetPlayer(string playerName)
+
+    private List<Player> m_Playerss;
+    public GameMetaData()
     {
-        if(!m_Players.ContainsKey(playerName)) 
-            m_Players.Add(playerName, null);
-        return m_Players[playerName];
+        m_Playerss = new List<Player>();
     }
     public void SetPlayer(Player player)
     {        
-        if(m_Players.ContainsKey(player.GetName))
-            m_Players[player.GetName] = player;
-        else
-            m_Players.Add(player.GetName, player);        
+        bool check = false;   
+        for(int i = 0; i < m_Playerss.Count; i++)        
+            if (m_Playerss[i].GetName == player.GetName)
+            {
+                m_Playerss[i] = player;
+                check = true;
+                break;
+            }
+        if (!check)
+            m_Playerss.Add(player);
     }
     public List<Player> GetPlayers
     {
-        get{ 
-            List<Player> players = new List<Player>();
-            foreach(Player player in m_Players.Values)            
-                players.Add(player);            
-            return players;
+        get{       
+            return m_Playerss;
         }
     }
-
     public void Clear()
     {
-        m_Players.Clear();
+        m_Playerss.Clear();
     }
-
 }

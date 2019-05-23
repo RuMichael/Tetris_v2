@@ -21,15 +21,14 @@ public class PlayerInfo : MonoBehaviour
         hubRows = null;
         hubDiff = null;    
     }
-    public void ShowInfoPlayer(string name)
+    public void ShowInfoPlayer(Player player, int count)
     {
-        Player player = GameMetaData.GetInstance().GetPlayer(name);
         hubName.text = player.GetName;
         hubScore.text = "Score: " + player.Score.ToString();
         hubRows.text = "Rows: " + player.Rows.ToString();
         hubDiff.text = "Difficulty: " + player.Difficulty.ToString();
 
-        GameObject tmp = Instantiate(prefabs[0], startPosPrefabControl);
+        GameObject tmp = Instantiate(prefabs[count], startPosPrefabControl);
         
     }
 
