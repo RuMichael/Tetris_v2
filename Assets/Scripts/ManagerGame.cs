@@ -9,27 +9,40 @@ public class ManagerGame : MonoBehaviour
     public GameObject prefabGrid;
     public static ManagerGame singlton{get;set;}
     List<Game> games = new List<Game>();
-    public Transform startPosition;
+    public Transform startPositionSolo;
+    public Transform[] startPositionPlayer2 = new Transform[2];
+    public Transform[] startPositionPlayer3 = new Transform[3];
 
     void Start()
     {
         if (singlton != null)
             Destroy(singlton.gameObject);
         singlton = this;
-        int c = 0;
+
+        Transform[] tmpPosition ;
+        List<Player> players = GameMetaData.GetInstance().GetPlayers;
+
+        if (players.Count == 1)        
+        {
+            tmpPosition = new Transform[1];
+            tmpPosition[0] = startPositionSolo;
+        }
+            
+        else if (players.Count == 2)
+            tmpPosition = startPositionPlayer2;
+        else 
+            tmpPosition = startPositionPlayer3;
+            
         GameObject instGrid;
         Game game;
-        float scale = (GameMetaData.GetInstance().GetPlayers.Count <= 2) ? 0.9f : 0.7f;
-        foreach (Player item in GameMetaData.GetInstance().GetPlayers)
+        
+
+        for (int i = 0; i < players.Count; i++)
         {
-            instGrid = (GameObject)Instantiate(prefabGrid);
-            float biasPrefab = instGrid.GetComponent<RectTransform>().rect.width * scale;
-            instGrid.transform.localScale = new Vector3(scale,scale,0);
-            instGrid.transform.position = new Vector3(startPosition.position.x + biasPrefab * c, startPosition.position.y, startPosition.position.z);
+            instGrid = (GameObject)Instantiate(prefabGrid,tmpPosition[i]);
             game = instGrid.GetComponentInChildren<Game>();  
             games.Add(game);
-            game.GoStart(item);
-            c++;
+            game.GoStart(players[i]);
         }
     }
     public void CheckGameOver()
@@ -37,11 +50,8 @@ public class ManagerGame : MonoBehaviour
         bool check = true;
         foreach (Game game in games)        
             if (!game.IsDone)
-                check = false;
-        
-        if (check)
-        {
-            SceneManager.LoadScene("GameOver");
-        }
+                check = false;        
+        if (check)        
+            SceneManager.LoadScene("GameOver");        
     }
 }
