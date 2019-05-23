@@ -253,6 +253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7dc942b8ed8949488ee6cf22d7c297d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabGrid: {fileID: 407195977333857135, guid: 10013d65417582e40807af04a467d498,
+    type: 3}
   startPosition: {fileID: 586961811}
 --- !u!4 &690475451
 Transform:

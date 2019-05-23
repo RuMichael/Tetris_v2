@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ManagerGame : MonoBehaviour
 {
+    public GameObject prefabGrid;
     public static ManagerGame singlton{get;set;}
     List<Game> games = new List<Game>();
     public Transform startPosition;
@@ -21,7 +22,7 @@ public class ManagerGame : MonoBehaviour
         float scale = (GameMetaData.GetInstance().GetPlayers.Count <= 2) ? 0.9f : 0.7f;
         foreach (Player item in GameMetaData.GetInstance().GetPlayers)
         {
-            instGrid = (GameObject)Instantiate(Resources.Load("Prefabs/Grid", typeof(GameObject)));
+            instGrid = (GameObject)Instantiate(prefabGrid);
             float biasPrefab = instGrid.GetComponent<RectTransform>().rect.width * scale;
             instGrid.transform.localScale = new Vector3(scale,scale,0);
             instGrid.transform.position = new Vector3(startPosition.position.x + biasPrefab * c, startPosition.position.y, startPosition.position.z);
