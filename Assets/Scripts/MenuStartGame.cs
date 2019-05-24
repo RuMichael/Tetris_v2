@@ -16,6 +16,14 @@ public class MenuStartGame : MonoBehaviour
         hud_Header.text =" TETRIS ";  
         playSolo = true;  
         SetControls();   
+    
+        #if UNITY_ANDROID
+        {
+            Debug.Log("Iphone");
+            GoPlayAndroid(new Player("Player1", controls["solo"]));
+        }
+        #endif
+
     }
 
     void SetControls()
@@ -110,6 +118,12 @@ public class MenuStartGame : MonoBehaviour
             Player player = tempStorage.Pop();
             GameMetaData.GetInstance().SetPlayer(player);
         }
+        SceneManager.LoadScene("Level");
+    }
+
+    void GoPlayAndroid(Player player)
+    {
+        GameMetaData.GetInstance().SetPlayer(player);        
         SceneManager.LoadScene("Level");
     }
 }

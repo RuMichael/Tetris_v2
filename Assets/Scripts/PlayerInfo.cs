@@ -28,7 +28,7 @@ public class PlayerInfo : MonoBehaviour
         hubRows.text = "Rows: " + player.Rows.ToString();
         hubDiff.text = "Difficulty: " + player.Difficulty.ToString();
 
-        GameObject tmp = Instantiate(prefabs[count], startPosPrefabControl);
+         Instantiate(prefabs[count], startPosPrefabControl);
         
     }
 
